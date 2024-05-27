@@ -1,5 +1,5 @@
 {
-  "version": "v2.14.8",
+  "version": "v2.14.6",
   "name": "Destroy",
   "bytecodeTemplate": "010103000000040c0c{0}0109",
   "fieldsSig": {

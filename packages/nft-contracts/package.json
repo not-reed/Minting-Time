@@ -8,8 +8,8 @@
   },
   "scripts": {
     "cli": "bun ../web3/bin/cli.ts",
-    "compile": "bun cli compile --network devnet",
-    "deploy": "bun cli deploy --network devnet",
+    "compile": "bun cli compile --network testnet",
+    "deploy": "bun cli deploy --network testnet",
     "test": "bun test",
     "compile:watch": "fd -e .ral | entr -r bun run compile",
     "test:watch": "fd -e .ts | entr -r bun test"

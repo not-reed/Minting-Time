@@ -25,9 +25,9 @@ export default {
 		testnet: {
 			nodeUrl: process.env.TESTNET_NODE_URL as string,
 			privateKeys:
-				process.env.PRIVATE_KEYS === undefined
+				process.env.TESTNET_PRIVATE_KEYS === undefined
 					? []
-					: process.env.PRIVATE_KEYS.split(","),
+					: process.env.TESTNET_PRIVATE_KEYS.split(","),
 			settings: {
 				...settings,
 				// testnet overrides
@@ -37,9 +37,9 @@ export default {
 		mainnet: {
 			nodeUrl: process.env.MAINNET_NODE_URL as string,
 			privateKeys:
-				process.env.PRIVATE_KEYS === undefined
+				process.env.MAINNET_PRIVATE_KEYS === undefined
 					? []
-					: process.env.PRIVATE_KEYS.split(","),
+					: process.env.MAINNET_PRIVATE_KEYS.split(","),
 			settings: {
 				...settings,
 				// mainnet overrides

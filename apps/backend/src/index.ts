@@ -8,8 +8,11 @@ import {
 } from "@alephium/web3";
 import { cors } from "hono/cors";
 
-const NETWORK = "devnet";
-const NODE_URL = "http://127.0.0.1:22973";
+// const NETWORK = "devnet";
+// const NODE_URL = "http://127.0.0.1:22973";
+
+const NETWORK = "testnet";
+const NODE_URL = "https://node.testnet.alephium.org";
 
 // devnet
 web3.setCurrentNodeProvider(NODE_URL);
@@ -23,7 +26,11 @@ function formatClock(clock: ClockNFT) {
 		id: clock.id,
 		index: clock.index,
 		minter: clock.minter,
-		metadata: clock.metadata,
+		metadata: {
+			name: decodeURIComponent(clock.metadata.name),
+			attributes: clock.metadata.attributes,
+			image: clock.metadata.image,
+		},
 	};
 }
 
@@ -32,6 +39,7 @@ interface MetaData {
 	name: string;
 	attributes: Array<{ trait_type: string; value: string }>;
 }
+
 interface ClockNFT {
 	address: string;
 	id: string;
@@ -43,34 +51,34 @@ interface ClockNFT {
 const tokens = new Map<string, ClockNFT>();
 
 // subscribe to mint events, and cache locally
-// NFTCollection.at(
-// 	deployments.contracts.NFTCollection.contractInstance.address,
-// ).subscribeMintEvent(
-// 	{
-// 		pollingInterval: 1_000, /// every second in dev, can be increased in prod, not so needed for realtime
-// 		messageCallback: async (event) => {
-// 			const { nft, index, minter } = event.fields;
-// 			const nftState = hexToString(
-// 				await NFT.at(addressFromContractId(nft))
-// 					.methods.getTokenUri()
-// 					.then((a) => a.returns),
-// 			);
-// 			tokens.set(nft, {
-// 				address: addressFromContractId(nft),
-// 				id: nft,
-// 				index: index.toString() as `${number}`,
-// 				minter: minter,
-// 				metadata: JSON.parse(
-// 					nftState.replace("data:application/json;utf8,", ""),
-// 				),
-// 			});
-// 		},
-// 		errorCallback: async (error) => {
-// 			console.error("Something went wrong poling the collection events");
-// 		},
-// 	},
-// 	0,
-// );
+NFTCollection.at(
+	deployments.contracts.NFTCollection.contractInstance.address,
+).subscribeMintEvent(
+	{
+		pollingInterval: 5_000, /// every second in dev, can be increased in prod, not so needed for realtime
+		messageCallback: async (event) => {
+			const { nft, index, minter } = event.fields;
+			const nftState = hexToString(
+				await NFT.at(addressFromContractId(nft))
+					.methods.getTokenUri()
+					.then((a) => a.returns),
+			);
+			tokens.set(nft, {
+				address: addressFromContractId(nft),
+				id: nft,
+				index: index.toString() as `${number}`,
+				minter: minter,
+				metadata: JSON.parse(
+					nftState.replace("data:application/json;utf8,", ""),
+				),
+			});
+		},
+		errorCallback: async (error) => {
+			console.error("Something went wrong poling the collection events");
+		},
+	},
+	0,
+);
 
 const app = new Hono()
 	.use("/api/*", cors())
@@ -84,39 +92,45 @@ const app = new Hono()
 			return c.json([] as ReturnType<typeof formatClock>[]);
 		}
 
-		// const nfts = await Promise.all(
-		// 	clocks.map((a) => {
-		// 		const clock = tokens.get(cur.id);
-
-		// 		// if need to refetch times
-		// 		// const nftState = hexToString(
-		// 		// 	await NFT.at(clock.address)
-		// 		// 		.methods.getTokenUri()
-		// 		// 		.then((a) => a.returns),
-		// 		// );
-		// 		// return {
-		// 		// 	address: clock.address,
-		// 		// 	id: clock.id,
-
-		// 		// 	minter: clock.minter,
-		// 		// 	metadata: JSON.parse(
-		// 		// 		nftState.replace("data:application/json;utf8,", ""),
-		// 		// 	),
-		// 		// };
-		// 	}, [] as ClockNFT[]),
-		// );
-
 		const processed = clocks.filter((a) => tokens.has(a.id));
 
-		const results = [] as ReturnType<typeof formatClock>[];
-		for (const cur of processed) {
-			const clock = tokens.get(cur.id);
-			if (clock) {
-				results.push(formatClock(clock));
-			}
-		}
+		const nfts = await Promise.all(
+			processed.map(async (a) => {
+				const clock = tokens.get(a.id);
 
-		return c.json(results);
+				if (!clock) {
+					// won't happen, but required to check for typescript
+					return {
+						address: "",
+						id: "",
+						minter: "",
+						metadata: {
+							image: "data:image/svg+xml;base64,",
+							name: "",
+							attributes: [],
+						} satisfies MetaData,
+					};
+				}
+
+				// if need to refetch times
+				const nftState = hexToString(
+					await NFT.at(clock.address)
+						.methods.getTokenUri()
+						.then((a) => a.returns),
+				);
+				return formatClock({
+					address: clock.address,
+					id: clock.id,
+					index: clock.index,
+					minter: clock.minter,
+					metadata: JSON.parse(
+						nftState.replace("data:application/json;utf8,", ""),
+					) satisfies MetaData,
+				});
+			}, []),
+		);
+
+		return c.json(nfts);
 	})
 	.get("/api/all", async (c) => {
 		return c.json({
@@ -124,7 +138,7 @@ const app = new Hono()
 			contractId:
 				deployments.contracts.NFTCollection.contractInstance.contractId,
 			totalSupply: tokens.size,
-			nfts: Array.from(tokens.values()),
+			nfts: Array.from(tokens.values()).map(formatClock),
 		});
 	});
 

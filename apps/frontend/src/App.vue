@@ -60,6 +60,8 @@ const { open, close } = useModal({
 		},
 	},
 });
+
+const pendingTransaction = ref(false)
 </script>
 
 <template>
@@ -101,7 +103,8 @@ const { open, close } = useModal({
 						</div> Connect To Mint
 					</button>
 					<AlephiumExecute :txScript="MintNFT" :fields="fields" v-slot="{ execute }" v-else>
-						<button @click="execute"
+						<button @click="execute" @txInitiated="pendingTransaction = true"
+							@txConfirmed="pendingTransaction = false"
 							class="border text-6xl flex max-w-xl justify-start items-center gap-8 bg-zinc-900 hover:bg-black rounded-lg p-4 shadow-lg hover:shadow-xl transition hover:-translate-y-px hover:-translate-x-px active:translate-y-1 active:translate-x-1 active:shadow active:scale-[0.97] active:bg-zinc-800">
 							<div class="h-12 w-12">
 								<svg xmlns="http://www.w3.org/2000/svg" stroke="#000"
@@ -109,7 +112,7 @@ const { open, close } = useModal({
 									viewBox="0 0 40 40">
 									<use xlink:href="#clock-template" />
 								</svg>
-							</div>Mint
+							</div>Mint: <span>5<span class="opacity-50">+1 ALPH</span></span>
 						</button>
 					</AlephiumExecute>
 
@@ -140,12 +143,39 @@ const { open, close } = useModal({
 							</div>
 						</div>
 
-						<div class="grid grid-cols-2 justify-between max-w-xl gap-8">
-							<div v-for="clock in clocks" class="flex flex-col items-center bg-zinc-900 p-4 rounded-lg">
+						<TransitionGroup name="list" tag="div" class="grid grid-cols-2 justify-between max-w-xl gap-8">
+							<div class="flex flex-col items-center bg-zinc-900 p-4 rounded-lg" key="loading"
+								v-if="pendingTransaction">
+								<div class="h-24 w-24">
+
+									<svg xmlns="http://www.w3.org/2000/svg" stroke="#000"
+										style="transform: rotate(-90deg)" viewBox="0 0 40 40">
+										<circle cx="20" cy="20" r="19" />
+										<g class="m">
+											<line x1="15" x2="16" />
+											<line x1="15" x2="16" />
+											<line x1="15" x2="16" />
+											<line x1="15" x2="16" />
+											<line x1="15" x2="16" />
+											<line x1="15" x2="16" />
+											<line x1="15" x2="16" />
+											<line x1="15" x2="16" />
+											<line x1="15" x2="16" />
+											<line x1="15" x2="16" />
+											<line x1="15" x2="16" />
+											<line x1="15" x2="16" />
+										</g>
+										<circle cx="20" cy="20" r=".7" class="pin" />
+									</svg>
+								</div>
+								<div>Loading...</div>
+							</div>
+							<div v-for="clock in clocks" class="flex flex-col items-center bg-zinc-900 p-4 rounded-lg"
+								:key="clock.id">
 								<img :src="clock.metadata.image" alt="clock" class="h-24 w-24" />
 								<div>{{ decodeURIComponent(clock.metadata.name) }}</div>
 							</div>
-						</div>
+						</TransitionGroup>
 					</template>
 
 				</AlephiumConnect>
@@ -156,43 +186,36 @@ const { open, close } = useModal({
 					<h2 class="text-4xl">What Is Minting Time</h2>
 					<p class="pl-4">
 						Aside from the punny name. Minting Time is the first entirely onchain
-						collection on Alephium. Its a collection of 377 unique clocks representing various, generated in
-						real-time
-						as you
-						view them.
+						collection on Alephium. Its a collection of 377 unique clocks representing various timezones,
+						generated in real-time as you view them.
 					</p>
 
 					<p class="italic">> Aren't all Alephium NFTs entirely on Alephium though?</p>
 
-					<p class="pl-4">Sort of... Generally speaking the contract on Alephium simply contains data pointing
-						the
-						where to
-						find the off-chain components such as the image itself and traits. Sometimes this points to a
-						traditional Web2
-						website which can be a problem since if the website owner shuts the website down, it renders
-						your
-						NFT image inaccessible.</p>
-					<p class="pl-4">An improvement over this is IPFS, as it provides a decentralized P2P
-						alternative, however this still relies on someone to host the data, known as
-						<span class="italic">"pinning"</span>. This is an improvement as NFT owners now have the ability
-						to
-						pin their owned NFT's ensuring content accessability, however in practice, not many end-users
-						pin
-						their own content and simply rely on the original creator to continue to pin forever. If the
-						creator
-						stops pinning, and no one else has the content pinned, then similar to the method above, the
-						content
-						is rendered inaccessible.
+					<p class="pl-4">
+						Sort of... Generally speaking the contract on Alephium simply contains data pointing
+						the where to find the off-chain components such as the image itself and traits. Sometimes this
+						points to a traditional Web2 website which can be a problem since if the website owner shuts the
+						website down, it renders your NFT image inaccessible.
 					</p>
 
-					<p class="pl-4">The most commonly used method on Alephium however is Arweave. This is due, in no
-						small
-						part, to the
-						support of DeadRare as its the recommended method from their documentation. Arweave's goal is to
-						provide a permanent, immutable, decentralized solution to static data storage. Creators pay
-						initially to upload the files to the network, where they continue to be accessible in perpetuity
-						so
-						long as the Arweave network remains functional.</p>
+					<p class="pl-4">
+						An improvement over this is IPFS, as it provides a decentralized P2P
+						alternative, however this still relies on someone to host the data, known as
+						<span class="italic">"pinning"</span>. This is an improvement as NFT owners now have the ability
+						to pin their owned NFT's ensuring content accessability, however in practice, not many end-users
+						pin their own content and simply rely on the original creator to continue to pin forever. If the
+						creator stops pinning, and no one else has the content pinned, then similar to the method above,
+						the content is rendered inaccessible.
+					</p>
+
+					<p class="pl-4">
+						The most commonly used method on Alephium however is Arweave. This is due, in no
+						small part, to the support of DeadRare as its the recommended method from their documentation.
+						Arweave's goal is to provide a permanent, immutable, decentralized solution to static data
+						storage. Creators pay initially to upload the files to the network, where they continue to be
+						accessible in perpetuity so long as the Arweave network remains functional.
+					</p>
 
 					<p class="italic">> Ok so how is Minting Time different?</p>
 
@@ -218,20 +241,16 @@ const { open, close } = useModal({
 
 					<p class="italic">> Wait, how is this possible?</p>
 
-					<p class="pl-4">SVGs! Unlike binary formats such as JPG or PNG, SVG is a markup language similar to
+					<p class="pl-4">
+						SVGs! Unlike binary formats such as JPG or PNG, SVG is a markup language similar to
 						HTML. This means images can be built using simple string manipulation techniques like
-						concatenation.
-						Also similar to HTML, these can be styled and animated using traditional CSS, and viewed easily
-						in
-						any web browser. Of course SVGs can be pre-generated and stored on IPFS or Arweave, similar to
-						any
-						other image format and most other NFT's in circulation today, however by generating these images
-						on
-						the fly within Ralph smart contracts, we have access to real time onchain data. Combined with
-						the
-						knowledge above, this presents some really interesting opportunities for displaying onchain data
-						in
-						real time using dynamic NFTs.</p>
+						concatenation. Also similar to HTML, these can be styled and animated using traditional CSS, and
+						viewed easily in any web browser. Of course SVGs can be pre-generated and stored on IPFS or
+						Arweave, similar to any other image format and most other NFT's in circulation today, however by
+						generating these images on the fly within Ralph smart contracts, we have access to real time
+						onchain data. Combined with the knowledge above, this presents some really interesting
+						opportunities for displaying onchain data in real time using dynamic NFTs.
+					</p>
 				</div>
 			</section>
 
