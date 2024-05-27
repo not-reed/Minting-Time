@@ -11,7 +11,7 @@ import { ONE_ALPH, DUST_AMOUNT } from "@alephium/web3";
 import { MintNFT } from "@repo/nft-contracts/artifacts/ts/scripts";
 
 import { computed, ref } from "vue";
-import { deployments } from "./data";
+import { NETWORK, deployments } from "./data";
 import { getBalance } from "./api";
 
 
@@ -66,7 +66,7 @@ const pendingTransaction = ref(false)
 
 <template>
 
-	<AlephiumConnectionProvider :autoConnect="true" :group="0" network="devnet">
+	<AlephiumConnectionProvider :autoConnect="true" :group="0" :network="NETWORK">
 
 		<div class="hidden">
 			<Clock />
