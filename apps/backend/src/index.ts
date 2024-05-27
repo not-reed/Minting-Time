@@ -43,34 +43,34 @@ interface ClockNFT {
 const tokens = new Map<string, ClockNFT>();
 
 // subscribe to mint events, and cache locally
-NFTCollection.at(
-	deployments.contracts.NFTCollection.contractInstance.address,
-).subscribeMintEvent(
-	{
-		pollingInterval: 1_000, /// every second in dev, can be increased in prod, not so needed for realtime
-		messageCallback: async (event) => {
-			const { nft, index, minter } = event.fields;
-			const nftState = hexToString(
-				await NFT.at(addressFromContractId(nft))
-					.methods.getTokenUri()
-					.then((a) => a.returns),
-			);
-			tokens.set(nft, {
-				address: addressFromContractId(nft),
-				id: nft,
-				index: index.toString() as `${number}`,
-				minter: minter,
-				metadata: JSON.parse(
-					nftState.replace("data:application/json;utf8,", ""),
-				),
-			});
-		},
-		errorCallback: async (error) => {
-			console.error("Something went wrong poling the collection events");
-		},
-	},
-	0,
-);
+// NFTCollection.at(
+// 	deployments.contracts.NFTCollection.contractInstance.address,
+// ).subscribeMintEvent(
+// 	{
+// 		pollingInterval: 1_000, /// every second in dev, can be increased in prod, not so needed for realtime
+// 		messageCallback: async (event) => {
+// 			const { nft, index, minter } = event.fields;
+// 			const nftState = hexToString(
+// 				await NFT.at(addressFromContractId(nft))
+// 					.methods.getTokenUri()
+// 					.then((a) => a.returns),
+// 			);
+// 			tokens.set(nft, {
+// 				address: addressFromContractId(nft),
+// 				id: nft,
+// 				index: index.toString() as `${number}`,
+// 				minter: minter,
+// 				metadata: JSON.parse(
+// 					nftState.replace("data:application/json;utf8,", ""),
+// 				),
+// 			});
+// 		},
+// 		errorCallback: async (error) => {
+// 			console.error("Something went wrong poling the collection events");
+// 		},
+// 	},
+// 	0,
+// );
 
 const app = new Hono()
 	.use("/api/*", cors())

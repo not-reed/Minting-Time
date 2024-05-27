@@ -7,12 +7,14 @@
     "stop:devnet": "cd services/devnet && docker compose down",
     "compile": "turbo compile --",
     "lint": "turbo lint --",
-    "deploy": "turbo deploy --",
+    "deploy:api": "flyctl deploy --config apps/backend/fly.toml --dockerfile apps/backend/Dockerfile",
+    "__deploy": "turbo deploy --",
     "dev": "turbo dev --",
     "test": "turbo test --"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.7.3",
+    "@flydotio/dockerfile": "^0.5.7",
     "@types/bun": "latest",
     "turbo": "^1.13.3"
   },
