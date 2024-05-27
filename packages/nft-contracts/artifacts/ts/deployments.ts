@@ -2,8 +2,8 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { RunScriptResult, DeployContractExecutionResult } from "@alephium/cli";
-import { NetworkId } from "@alephium/web3";
+import type { RunScriptResult, DeployContractExecutionResult } from "@alephium/cli";
+import type { NetworkId } from "@alephium/web3";
 import {
   TimeZoneSpliceByteVec,
   TimeZoneSpliceByteVecInstance,
