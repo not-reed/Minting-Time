@@ -1,0 +1,164 @@
+<template>
+    <svg xmlns="http://www.w3.org/2000/svg" stroke="#000" style="transform: rotate(-90deg)" viewBox="0 0 40 40">
+        <symbol id="clock-template">
+            <circle cx="20" cy="20" r="19" />
+            <g class="m">
+                <line x1="15" x2="16" />
+                <line x1="15" x2="16" />
+                <line x1="15" x2="16" />
+                <line x1="15" x2="16" />
+                <line x1="15" x2="16" />
+                <line x1="15" x2="16" />
+                <line x1="15" x2="16" />
+                <line x1="15" x2="16" />
+                <line x1="15" x2="16" />
+                <line x1="15" x2="16" />
+                <line x1="15" x2="16" />
+                <line x1="15" x2="16" />
+            </g>
+            <line x2="9" class="h" />
+            <line x2="13" class="mi" />
+            <line x2="16" class="s" />
+            <circle cx="20" cy="20" r=".7" class="pin" />
+        </symbol>
+    </svg>
+</template>
+
+<style>
+:root {
+    --s: 12;
+    --m: 12;
+    --h: 2;
+}
+
+circle {
+    fill: white;
+}
+
+.m {
+    transform: translate(20px, 20px);
+    stroke-width: 0.2;
+}
+
+.s,
+.mi,
+.h {
+    transform: translate(20px, 20px) rotate(0deg);
+}
+
+.s {
+    transform: translate(20px, 20px) rotate(calc(var(--s)*6deg));
+    stroke-width: 0.3;
+    animation: rotateSecondHand 60s steps(60) infinite;
+    stroke: #d00505;
+}
+
+.mi {
+    transform: translate(20px, 20px) rotate(calc(var(--m)*6deg));
+    stroke-width: 0.6;
+    animation: rotatemiHand 3600s steps(60) infinite;
+    animation-delay: calc(var(--s)*-1*1s);
+}
+
+.h {
+    transform: translate(20px, 20px) rotate(calc(var(--h)*30deg));
+    animation: rotatehHand calc(12*60*60s) linear infinite;
+    stroke-width: 1;
+    animation-delay: calc(calc(var(--m)*-60*1s) + calc(var(--s)*-1*1s));
+}
+
+.text {
+    font-size: 1px;
+    font-family: sans-serif;
+    transform: translate(14px, 19px) rotate(90deg);
+    fill: #dfdfdf;
+    stroke: none;
+}
+
+.pin {
+    stroke: #d00505;
+    stroke-width: 0.2;
+}
+
+@keyframes rotateSecondHand {
+    from {
+        transform: translate(20px, 20px) rotate(calc(var(--s)*6deg));
+    }
+
+    to {
+        transform: translate(20px, 20px) rotate(calc(var(--s)*6deg + 360deg));
+    }
+}
+
+@keyframes rotatemiHand {
+    from {
+        transform: translate(20px, 20px) rotate(calc(var(--m)*6deg));
+    }
+
+    to {
+        transform: translate(20px, 20px) rotate(calc(var(--m)*6deg + 360deg));
+    }
+}
+
+@keyframes rotatehHand {
+    from {
+        transform: translate(20px, 20px) rotate(calc(var(--h)*30deg));
+    }
+
+    to {
+        transform: translate(20px, 20px) rotate(calc(var(--h)*30deg + 360deg));
+    }
+}
+
+.m>line:nth-child(1) {
+    transform: rotate(30deg);
+}
+
+.m>line:nth-child(2) {
+    transform: rotate(calc(2*30deg));
+}
+
+.m>line:nth-child(3) {
+    transform: rotate(calc(3*30deg));
+    stroke-width: 0.5;
+}
+
+.m>line:nth-child(4) {
+    transform: rotate(calc(4*30deg));
+}
+
+.m>line:nth-child(5) {
+    transform: rotate(calc(5*30deg));
+}
+
+.m>line:nth-child(6) {
+    transform: rotate(calc(6*30deg));
+    stroke-width: 0.5;
+}
+
+.m>line:nth-child(7) {
+    transform: rotate(calc(7*30deg));
+}
+
+.m>line:nth-child(8) {
+    transform: rotate(calc(8*30deg));
+}
+
+.m>line:nth-child(9) {
+    transform: rotate(calc(9*30deg));
+    stroke-width: 0.5;
+}
+
+.m>line:nth-child(10) {
+    transform: rotate(calc(10*30deg));
+}
+
+.m>line:nth-child(11) {
+    transform: rotate(calc(11*30deg));
+}
+
+.m>line:nth-child(12) {
+    transform: rotate(calc(12*30deg));
+    stroke-width: 0.5;
+}
+</style>

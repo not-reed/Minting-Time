@@ -1,0 +1,87 @@
+Contract TimeZoneCoordinatorU256(
+    owner: Address,
+    mut controller: Address,
+    spliceOne: TimeZoneSpliceU256,
+    spliceTwo: TimeZoneSpliceU256,
+    spliceThree: TimeZoneSpliceU256,
+    spliceFour: TimeZoneSpliceU256,
+    spliceFive: TimeZoneSpliceU256,
+    mut minted: U256
+) {
+    const TOTAL = 377
+
+    enum ErrorCode {
+        UnAuthorized = 422
+    }
+
+    @using(updateFields = true)
+    pub fn setController(controller_: Address) -> () {
+        checkCaller!(owner == callerAddress!(), ErrorCode.UnAuthorized)
+        controller = controller_
+    }
+
+    @using(updateFields = true)
+    pub fn getItem(item: U256) -> I256 {
+        checkCaller!(controller == callerAddress!(), ErrorCode.UnAuthorized)
+        let wanted = internalGetItem(item)
+
+        minted = minted + 1
+
+        let last = internalGetItem(TOTAL - minted)
+        internalSetItem(item, last)
+        
+        return wanted
+    }
+
+    fn internalGetItem(item: U256) -> I256 {
+        if (item < 76) {
+            return spliceOne.getItem(item)
+        } else if (item < 152) {
+            return spliceTwo.getItem(item)
+        } else if (item < 228) {
+            return spliceThree.getItem(item)
+        } else if (item < 304) {
+            return spliceFour.getItem(item)
+        } else {
+            return spliceFive.getItem(item)
+        }
+    }
+
+    fn internalSetItem(item: U256, value: I256) -> () {
+        if (item < 76) {
+            return spliceOne.setItem(item, value)
+        } else if (item < 152) {
+            return spliceTwo.setItem(item, value)
+        } else if (item < 228) {
+            return spliceThree.setItem(item, value)
+        } else if (item < 304) {
+            return spliceFour.setItem(item, value)
+        } else {
+            return spliceFive.setItem(item, value)
+        }
+    }
+
+    @using(assetsInContract = true, checkExternalCaller = false)
+    pub fn destroy() -> () {
+        if (minted >= 76) {
+            spliceFive.destroy()
+        }
+
+        if (minted >= 152) {
+            spliceFour.destroy()
+        }
+
+        if (minted >= 228) {
+            spliceThree.destroy()
+        }
+
+        if (minted >= 304) {
+            spliceTwo.destroy()
+        }
+
+        if (minted >= TOTAL) {
+            spliceOne.destroy()
+            destroySelf!(owner)
+        }
+    }
+}

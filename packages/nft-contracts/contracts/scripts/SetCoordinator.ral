@@ -1,0 +1,26 @@
+TxScript SetCoordinatorByteVec(splice: TimeZoneSpliceByteVec, address: Address) {
+    splice.setCoordinator(address)
+}
+
+
+TxScript SetCoordinatorU256(splice: TimeZoneSpliceU256, address: Address) {
+    splice.setCoordinator(address)
+}
+
+TxScript SetControllerByteVec(splice: TimeZoneCoordinatorByteVec, address: Address) {
+    splice.setController(address)
+}
+
+
+TxScript SetControllerU256(splice: TimeZoneCoordinatorU256, address: Address) {
+    splice.setController(address)
+}
+
+
+TxScript SetCollection(controller: TimeZoneController, address: Address) {
+    controller.setCollection(address)
+}
+
+
+
+

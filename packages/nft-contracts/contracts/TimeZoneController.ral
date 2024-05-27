@@ -1,0 +1,60 @@
+Contract TimeZoneController(
+    owner: Address,
+    mut collection: Address,
+    mut minted: U256,
+    offsetCoordinator: TimeZoneCoordinatorU256,
+    abbrCoordinator: TimeZoneCoordinatorByteVec,
+    zoneCoordinator: TimeZoneCoordinatorByteVec
+) {
+    const MAX_SUPPLY = 377
+
+    enum ErrorCode {
+        OutOfStock = 69
+        UnAuthorized = 420
+    }
+
+    pub fn getStuff() -> (TimeZoneCoordinatorU256,TimeZoneCoordinatorByteVec,TimeZoneCoordinatorByteVec) {
+        return offsetCoordinator, abbrCoordinator, zoneCoordinator
+    }
+
+    @using(updateFields = true)
+    pub fn setCollection(collection_: Address) -> () {
+        checkCaller!(owner == callerAddress!(), ErrorCode.UnAuthorized)
+        collection = collection_
+    }
+
+    @using(updateFields = true, checkExternalCaller = false)
+    pub fn getItem() -> (ByteVec,I256,ByteVec) {
+        checkCaller!(collection == callerAddress!(), ErrorCode.UnAuthorized)
+        assert!(minted < MAX_SUPPLY, ErrorCode.OutOfStock)
+
+        let next = getRandom()
+
+        minted = minted + 1
+
+        let abbr = abbrCoordinator.getItem(next)
+        let offset = offsetCoordinator.getItem(next)
+        let zone = zoneCoordinator.getItem(next)
+
+        return zone, offset, abbr
+    }
+
+    fn getRandom() -> (U256){
+        let remaining = MAX_SUPPLY - minted
+        let seed = u256From32Byte!(blake2b!(toByteVec!(blockTarget!()) ++ toByteVec!(blockTimeStamp!())))
+        return addModN!(0,seed, remaining)
+    }
+
+    @using(assetsInContract = true, checkExternalCaller = false)
+    pub fn destroy() -> () {
+        // These are safe to call, and will only destroy if they are capable of doing so
+        offsetCoordinator.destroy()
+        abbrCoordinator.destroy()
+        zoneCoordinator.destroy()
+
+        if (minted >= MAX_SUPPLY) {
+            destroySelf!(owner)
+        }
+    }
+  }
+  

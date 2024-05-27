@@ -1,0 +1,34 @@
+{
+	"name": "@repo/web3",
+	"private": true,
+	"version": "0.0.0",
+	"module": "src/web3.ts",
+	"type": "module",
+	"exports": {
+		".": "./src/web3.ts",
+		"./cli": "./src/cli.ts",
+		"./test": "./src/test.ts",
+		"./wallet": "./src/wallet.ts",
+		"./walletconnect-provider": "./src/walletconnect-provider.ts",
+		"./get-extension-wallet": "./src/get-extension-wallet.ts",
+		"./walletconnect-qrcode-modal": "./src/walletconnect-qrcode-modal.ts"
+	},
+	"bin": {
+		"cli": "./bin/cli.ts"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	},
+	"dependencies": {
+		"@alephium/cli": "^0.40.0",
+		"@alephium/get-extension-wallet": "^0.40.0",
+		"@alephium/walletconnect-provider": "^0.40.0",
+		"@alephium/walletconnect-qrcode-modal": "^0.1.0",
+		"@alephium/web3": "^0.40.0",
+		"@alephium/web3-test": "^0.40.0",
+		"@alephium/web3-wallet": "^0.40.0"
+	}
+}

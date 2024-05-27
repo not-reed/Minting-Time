@@ -1,0 +1,30 @@
+{
+  "name": "@app/frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@alphpro/web3-vue": "^0.0.4",
+    "@repo/nft-contracts": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@repo/web3": "workspace:*",
+    "bignumber.js": "^9.1.2",
+    "vue": "^3.4.27",
+    "vue-final-modal": "^4.5.4"
+  },
+  "devDependencies": {
+    "@app/backend": "workspace:*",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "autoprefixer": "^10.4.19",
+    "buffer": "^6.0.3",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11"
+  }
+}

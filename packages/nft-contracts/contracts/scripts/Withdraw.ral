@@ -1,0 +1,3 @@
+TxScript Withdraw(nftCollectionId: NFTCollection, to: Address, amount: U256) {
+    nftCollectionId.withdrawAlph(to, amount)
+}

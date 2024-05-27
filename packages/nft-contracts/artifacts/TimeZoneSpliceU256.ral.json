@@ -1,0 +1,119 @@
+{
+  "version": "v2.14.8",
+  "name": "TimeZoneSpliceU256",
+  "bytecode": "404f050e40264045405a406e010000000103d391701f12ce000201000101010ad348c754d91600ce002b7a13404c314dc30201000202000fd3342778d1a04cb4450c7b16011600ce002b7a13404c314dc4010001010008d39e947ee8ce01b4450c7b1600a14c010200000008d38e18691ca04cb4450c7bce01b0",
+  "codeHash": "7a0c7f8efec8b59c06cb14eaef4754fe210848b68bdff619e2ebe79df5df1b9e",
+  "fieldsSig": {
+    "names": [
+      "start",
+      "fields",
+      "owner",
+      "coordinator"
+    ],
+    "types": [
+      "U256",
+      "[I256;76]",
+      "Address",
+      "Address"
+    ],
+    "isMutable": [
+      false,
+      true,
+      false,
+      true
+    ]
+  },
+  "eventsSig": [],
+  "functions": [
+    {
+      "name": "getStart",
+      "usePreapprovedAssets": false,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": [
+        "U256"
+      ]
+    },
+    {
+      "name": "getItem",
+      "usePreapprovedAssets": false,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [
+        "item"
+      ],
+      "paramTypes": [
+        "U256"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": [
+        "I256"
+      ]
+    },
+    {
+      "name": "setItem",
+      "usePreapprovedAssets": false,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [
+        "item",
+        "value"
+      ],
+      "paramTypes": [
+        "U256",
+        "I256"
+      ],
+      "paramIsMutable": [
+        false,
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "setCoordinator",
+      "usePreapprovedAssets": false,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [
+        "newCoordinator"
+      ],
+      "paramTypes": [
+        "Address"
+      ],
+      "paramIsMutable": [
+        false
+      ],
+      "returnTypes": []
+    },
+    {
+      "name": "destroy",
+      "usePreapprovedAssets": false,
+      "useAssetsInContract": true,
+      "isPublic": true,
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    }
+  ],
+  "constants": [],
+  "enums": [
+    {
+      "name": "ErrorCode",
+      "fields": [
+        {
+          "name": "WrongCaller",
+          "value": {
+            "type": "U256",
+            "value": "0"
+          }
+        }
+      ]
+    }
+  ]
+}

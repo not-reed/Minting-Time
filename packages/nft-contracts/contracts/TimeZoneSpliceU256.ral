@@ -1,0 +1,32 @@
+Contract TimeZoneSpliceU256(start: U256, mut fields: [I256;76], owner: Address, mut coordinator: Address) {
+    
+    enum ErrorCode {
+        WrongCaller = 0
+    }
+
+    pub fn getStart() -> U256 {
+        return start
+    }
+
+    pub fn getItem(item: U256) -> I256 {
+        return fields[item - start]
+    }
+
+    @using(updateFields = true)
+    pub fn setItem(item: U256, value: I256) -> () {
+        checkCaller!(coordinator == callerAddress!(), ErrorCode.WrongCaller)
+        fields[item - start] = value
+    }
+
+    @using(updateFields = true)
+    pub fn setCoordinator(newCoordinator: Address) -> () {
+        checkCaller!(owner == callerAddress!(), ErrorCode.WrongCaller)
+        coordinator = newCoordinator
+    }
+
+    @using(assetsInContract = true, checkExternalCaller = false)
+    pub fn destroy() -> () {
+        checkCaller!(coordinator == callerAddress!(), ErrorCode.WrongCaller)
+        destroySelf!(owner)
+    }
+}

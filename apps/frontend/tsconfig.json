@@ -1,0 +1,14 @@
+{
+	"extends": "@repo/typescript-config/vite.json",
+	"compilerOptions": {
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"baseUrl": "./",
+		"paths": {
+			"@/*": ["src/*"],
+			"@app/backend": ["../../backend/src"]
+		}
+	},
+	"include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
+	"references": [{ "path": "./tsconfig.node.json" }]
+}

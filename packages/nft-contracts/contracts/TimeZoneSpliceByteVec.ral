@@ -1,0 +1,32 @@
+Contract TimeZoneSpliceByteVec(start: U256, mut fields: [ByteVec;126], owner: Address, mut coordinator: Address) {
+    
+    enum ErrorCode {
+        WrongCaller = 0
+    }
+
+    pub fn getStart() -> U256 {
+        return start
+    }
+
+    pub fn getItem(item: U256) -> ByteVec {
+        return fields[item - start]
+    }
+
+    @using(updateFields = true)
+    pub fn setItem(item: U256, value: ByteVec) -> () {
+        checkCaller!(coordinator == callerAddress!(), ErrorCode.WrongCaller)
+        fields[item - start] = value
+    }
+
+    @using(updateFields = true)
+    pub fn setCoordinator(newCoordinator: Address) -> () {
+        checkCaller!(owner == callerAddress!(), ErrorCode.WrongCaller)
+        coordinator = newCoordinator
+    }
+
+    @using(assetsInContract = true, checkExternalCaller = false)
+    pub fn destroy() -> () {
+        checkCaller!(coordinator == callerAddress!(), ErrorCode.WrongCaller)
+        destroySelf!(owner)
+    }
+}

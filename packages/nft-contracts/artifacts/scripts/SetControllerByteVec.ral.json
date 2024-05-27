@@ -1,0 +1,31 @@
+{
+  "version": "v2.14.8",
+  "name": "SetControllerByteVec",
+  "bytecodeTemplate": "01010300000005{1}0d0c{0}0100",
+  "fieldsSig": {
+    "names": [
+      "splice",
+      "address"
+    ],
+    "types": [
+      "TimeZoneCoordinatorByteVec",
+      "Address"
+    ],
+    "isMutable": [
+      false,
+      false
+    ]
+  },
+  "functions": [
+    {
+      "name": "main",
+      "usePreapprovedAssets": true,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    }
+  ]
+}

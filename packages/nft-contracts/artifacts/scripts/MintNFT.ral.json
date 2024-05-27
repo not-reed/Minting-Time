@@ -1,0 +1,28 @@
+{
+  "version": "v2.14.8",
+  "name": "MintNFT",
+  "bytecodeTemplate": "01010300000007b413c446c6d6faa27e0000a20c0c{0}0104",
+  "fieldsSig": {
+    "names": [
+      "nftCollectionId"
+    ],
+    "types": [
+      "NFTCollection"
+    ],
+    "isMutable": [
+      false
+    ]
+  },
+  "functions": [
+    {
+      "name": "main",
+      "usePreapprovedAssets": true,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    }
+  ]
+}

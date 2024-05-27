@@ -1,0 +1,68 @@
+Contract TimeZoneCoordinatorByteVec(
+    owner: Address,
+    mut controller: Address,
+    spliceOne: TimeZoneSpliceByteVec,
+    spliceTwo: TimeZoneSpliceByteVec,
+    spliceThree: TimeZoneSpliceByteVec,
+    mut minted: U256
+) {
+    const TOTAL = 377
+
+    enum ErrorCode {
+        UnAuthorized = 421
+    }
+
+    @using(updateFields = true)
+    pub fn setController(controller_: Address) -> () {
+        checkCaller!(owner == callerAddress!(), ErrorCode.UnAuthorized)
+        controller = controller_
+    }
+
+    @using(updateFields = true)
+    pub fn getItem(item: U256) -> ByteVec {
+        checkCaller!(controller == callerAddress!(), ErrorCode.UnAuthorized)
+        let wanted = internalGetItem(item)
+        minted = minted + 1
+
+        let last = internalGetItem(TOTAL - minted)
+        internalSetItem(item, last)
+        
+        return wanted
+    }
+
+    fn internalGetItem(item: U256) -> ByteVec {
+        if (item < 126) {
+            return spliceOne.getItem(item)
+        } else if (item < 252) {
+            return spliceTwo.getItem(item)
+        } else {
+            return spliceThree.getItem(item)
+        }
+    }
+
+    fn internalSetItem(item: U256, value: ByteVec) -> () {
+        if (item < 126) {
+            return spliceOne.setItem(item, value)
+        } else if (item < 252) {
+            return spliceTwo.setItem(item, value)
+        } else {
+            return spliceThree.setItem(item, value)
+        }
+    }
+
+    @using(assetsInContract = true, checkExternalCaller = false)
+    pub fn destroy() -> () {
+        if (minted >= 126) {
+            spliceThree.destroy()
+        }
+
+        if (minted >= 252) {
+            spliceTwo.destroy()
+        }
+
+        if (minted >= TOTAL) {
+            spliceOne.destroy()
+            destroySelf!(owner)
+        }
+    }
+}

@@ -1,0 +1,98 @@
+import "std/nft_collection_interface"
+import "std/nft_collection_with_royalty_interface"
+
+Contract NFTCollection(
+    nftTemplateId: ByteVec,
+    timeZoneController: TimeZoneController,
+    owner: Address,
+    mut totalSupply: U256
+) implements INFTCollection {
+
+    event Mint(minter: Address, index: U256, nft: ByteVec)
+
+    const Price = 5 alph
+    const RoyaltyRate = 500 // 5%
+
+    enum ErrorCodes {
+        NFTNotFound = 0
+        CollectionOwnerAllowedOnly = 1
+        NFTNotPartOfCollection = 2
+    }
+
+    pub fn getCollectionUri() -> ByteVec {
+        return b`data:application/json;base64,eyJuYW1lIjoiTWludGluZyBUaW1lIiwiZGVzY3JpcHRpb24iOiJNaW50aW5nIFRpbWUgaXMgYSBmdWxseSBvbi1jaGFpbiBhbmltYXRlZCBjb2xsZWN0aW9uIG9mIGNsb2NrcyBtYWRlIHRvIHJlcHJlc2VudCBhbGwgdGhlIHRpbWUgem9uZXMgb24gZWFydGguIEFsd2F5cyB1cCB0byBkYXRlLCB0aGVzZSBjbG9ja3Mgd2lsbCBhbHdheXMgdHJhY2sgdGhlIGFjdHVhbCB0aW1lIGFzIHJlcG9ydGVkIGJ5IHRoZSBBbGVwaGl1bSBibG9ja2NoYWluLiIsImltYWdlIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhOMGNtOXJaVDBpSXpBd01DSWdjM1I1YkdVOUluUnlZVzV6Wm05eWJUb2djbTkwWVhSbEtDMDVNR1JsWnlraUlIWnBaWGRDYjNnOUlqQWdNQ0EwTUNBME1DSStQSE4wZVd4bFBqcHliMjkwZXkwdGN6b3hORHN0TFcwNk1UazdMUzFvT2prN2ZXTnBjbU5zWlh0bWFXeHNPbmRvYVhSbE8zMHViWHQwY21GdWMyWnZjbTA2ZEhKaGJuTnNZWFJsS0RJd2NIZ3NNakJ3ZUNrN2MzUnliMnRsTFhkcFpIUm9PakF1TWp0OUxuTXNMbTFwTEM1b2UzUnlZVzV6Wm05eWJUcDBjbUZ1YzJ4aGRHVW9NakJ3ZUN3Z01qQndlQ2tnY205MFlYUmxLREJrWldjcE8zMHVjM3QwY21GdWMyWnZjbTA2ZEhKaGJuTnNZWFJsS0RJd2NIZ3NJREl3Y0hncElISnZkR0YwWlNoallXeGpLSFpoY2lndExYTXBLalprWldjcEtUdHpkSEp2YTJVdGQybGtkR2c2TUM0ek8yRnVhVzFoZEdsdmJqcHliM1JoZEdWVFpXTnZibVJJWVc1a0lEWXdjeUJ6ZEdWd2N5ZzJNQ2tnYVc1bWFXNXBkR1U3YzNSeWIydGxPaU5rTURBMU1EVTdmUzV0YVh0MGNtRnVjMlp2Y20wNmRISmhibk5zWVhSbEtESXdjSGdzSURJd2NIZ3BJSEp2ZEdGMFpTaGpZV3hqS0haaGNpZ3RMVzBwS2paa1pXY3BLVHR6ZEhKdmEyVXRkMmxrZEdnNk1DNDJPMkZ1YVcxaGRHbHZianB5YjNSaGRHVnRhVWhoYm1RZ016WXdNSE1nYzNSbGNITW9OakFwSUdsdVptbHVhWFJsTzJGdWFXMWhkR2x2Ymkxa1pXeGhlVHBqWVd4aktIWmhjaWd0TFhNcEtpMHhLakZ6S1R0OUxtaDdkSEpoYm5ObWIzSnRPblJ5WVc1emJHRjBaU2d5TUhCNExDQXlNSEI0S1NCeWIzUmhkR1VvWTJGc1l5aDJZWElvTFMxb0tTb3pNR1JsWnlrcE8yRnVhVzFoZEdsdmJqcHliM1JoZEdWb1NHRnVaQ0JqWVd4aktERXlLall3S2pZd2N5a2diR2x1WldGeUlHbHVabWx1YVhSbE8zTjBjbTlyWlMxM2FXUjBhRG94TzJGdWFXMWhkR2x2Ymkxa1pXeGhlVHBqWVd4aktHTmhiR01vZG1GeUtDMHRiU2txTFRZd0tqRnpLU0FySUdOaGJHTW9kbUZ5S0MwdGN5a3FMVEVxTVhNcEtUdDlMblJsZUhSN1ptOXVkQzF6YVhwbE9qRndlRHRtYjI1MExXWmhiV2xzZVRwellXNXpMWE5sY21sbU8zUnlZVzV6Wm05eWJUcDBjbUZ1YzJ4aGRHVW9NVFJ3ZUN3eE9YQjRLU0J5YjNSaGRHVW9PVEJrWldjcE8yWnBiR3c2STJSbVpHWmtaanR6ZEhKdmEyVTZibTl1WlR0OUxuQnBibnR6ZEhKdmEyVTZJMlF3TURVd05UdHpkSEp2YTJVdGQybGtkR2c2TUM0eU8zMHViVDVzYVc1bE9tNTBhQzFqYUdsc1pDZ3hLWHQwY21GdWMyWnZjbTA2Y205MFlYUmxLRE13WkdWbktUdDlMbTArYkdsdVpUcHVkR2d0WTJocGJHUW9NaWw3ZEhKaGJuTm1iM0p0T25KdmRHRjBaU2hqWVd4aktESXFNekJrWldjcEtUdDlMbTArYkdsdVpUcHVkR2d0WTJocGJHUW9NeWw3ZEhKaGJuTm1iM0p0T25KdmRHRjBaU2hqWVd4aktETXFNekJrWldjcEtUdHpkSEp2YTJVdGQybGtkR2c2TUM0MU8zMHViVDVzYVc1bE9tNTBhQzFqYUdsc1pDZzBLWHQwY21GdWMyWnZjbTA2Y205MFlYUmxLR05oYkdNb05Db3pNR1JsWnlrcE8zMHViVDVzYVc1bE9tNTBhQzFqYUdsc1pDZzFLWHQwY21GdWMyWnZjbTA2Y205MFlYUmxLR05oYkdNb05Tb3pNR1JsWnlrcE8zMHViVDVzYVc1bE9tNTBhQzFqYUdsc1pDZzJLWHQwY21GdWMyWnZjbTA2Y205MFlYUmxLR05oYkdNb05pb3pNR1JsWnlrcE8zTjBjbTlyWlMxM2FXUjBhRG93TGpVN2ZTNXRQbXhwYm1VNmJuUm9MV05vYVd4a0tEY3BlM1J5WVc1elptOXliVHB5YjNSaGRHVW9ZMkZzWXlnM0tqTXdaR1ZuS1NrN2ZTNXRQbXhwYm1VNmJuUm9MV05vYVd4a0tEZ3BlM1J5WVc1elptOXliVHB5YjNSaGRHVW9ZMkZzWXlnNEtqTXdaR1ZuS1NrN2ZTNXRQbXhwYm1VNmJuUm9MV05vYVd4a0tEa3BlM1J5WVc1elptOXliVHB5YjNSaGRHVW9ZMkZzWXlnNUtqTXdaR1ZuS1NrN2MzUnliMnRsTFhkcFpIUm9PakF1TlR0OUxtMCtiR2x1WlRwdWRHZ3RZMmhwYkdRb01UQXBlM1J5WVc1elptOXliVHB5YjNSaGRHVW9ZMkZzWXlneE1Db3pNR1JsWnlrcE8zMHViVDVzYVc1bE9tNTBhQzFqYUdsc1pDZ3hNU2w3ZEhKaGJuTm1iM0p0T25KdmRHRjBaU2hqWVd4aktERXhLak13WkdWbktTazdmUzV0UG14cGJtVTZiblJvTFdOb2FXeGtLREV5S1h0MGNtRnVjMlp2Y20wNmNtOTBZWFJsS0dOaGJHTW9NVElxTXpCa1pXY3BLVHR6ZEhKdmEyVXRkMmxrZEdnNk1DNDFPMzA4TDNOMGVXeGxQanhqYVhKamJHVWdZM2c5SWpJd0lpQmplVDBpTWpBaUlISTlJakU1SWlBdlBqeG5JR05zWVhOelBTSnRJajQ4YkdsdVpTQjRNVDBpTVRVaUlIZ3lQU0l4TmlJZ0x6NDhiR2x1WlNCNE1UMGlNVFVpSUhneVBTSXhOaUlnTHo0OGJHbHVaU0I0TVQwaU1UVWlJSGd5UFNJeE5pSWdMejQ4YkdsdVpTQjRNVDBpTVRVaUlIZ3lQU0l4TmlJZ0x6NDhiR2x1WlNCNE1UMGlNVFVpSUhneVBTSXhOaUlnTHo0OGJHbHVaU0I0TVQwaU1UVWlJSGd5UFNJeE5pSWdMejQ4YkdsdVpTQjRNVDBpTVRVaUlIZ3lQU0l4TmlJZ0x6NDhiR2x1WlNCNE1UMGlNVFVpSUhneVBTSXhOaUlnTHo0OGJHbHVaU0I0TVQwaU1UVWlJSGd5UFNJeE5pSWdMejQ4YkdsdVpTQjRNVDBpTVRVaUlIZ3lQU0l4TmlJZ0x6NDhiR2x1WlNCNE1UMGlNVFVpSUhneVBTSXhOaUlnTHo0OGJHbHVaU0I0TVQwaU1UVWlJSGd5UFNJeE5pSWdMejQ4TDJjK1BIUmxlSFFnYzNSNWJHVTlJblJ5WVc1elptOXliVG9nZEhKaGJuTnNZWFJsS0RJeWNIZ3NOM0I0S1NCeWIzUmhkR1VvT1RCa1pXY3BJSE5qWVd4bEtEQXVNRFVwT3lCbWIyNTBMWE5wZW1VNklERTJOWEI0T3lCbWIyNTBMWGRsYVdkb2REb2dNVEF3T3lJK1RXbHVkR2x1Wnp3dmRHVjRkRDQ4ZEdWNGRDQnpkSGxzWlQwaWRISmhibk5tYjNKdE9pQjBjbUZ1YzJ4aGRHVW9NVEp3ZUN3eE1uQjRLU0J5YjNSaGRHVW9PVEJrWldjcElITmpZV3hsS0RBdU1EVXBPeUJtYjI1MExYTnBlbVU2SURFMk5YQjRPeUJtYjI1MExYZGxhV2RvZERvZ01UQXdPeUkrVkdsdFpUd3ZkR1Y0ZEQ0OGJHbHVaU0I0TWowaU9TSWdZMnhoYzNNOUltZ2lJQzgrUEd4cGJtVWdlREk5SWpFeklpQmpiR0Z6Y3owaWJXa2lJQzgrUEd4cGJtVWdlREk5SWpFMklpQmpiR0Z6Y3owaWN5SWdMejQ4WTJseVkyeGxJR040UFNJeU1DSWdZM2s5SWpJd0lpQnlQU0l1TnlJZ1kyeGhjM005SW5CcGJpSWdMejQ4TDNOMlp6ND0ifQ==`
+    }
+
+    pub fn totalSupply() -> U256 {
+        return totalSupply
+    }
+
+    @using(checkExternalCaller = false)
+    pub fn nftByIndex(index: U256) -> INFT {
+        let nftTokenId = subContractId!(toByteVec!(index))
+        assert!(contractExists!(nftTokenId), ErrorCodes.NFTNotFound)
+        return INFT(nftTokenId)
+    }
+
+    @using(checkExternalCaller = false)
+    pub fn validateNFT(nftId: ByteVec, nftIndex: U256) -> () {
+      let expectedTokenContract = nftByIndex(nftIndex)
+      assert!(nftId == contractId!(expectedTokenContract), ErrorCodes.NFTNotPartOfCollection)
+    }
+
+    @using(preapprovedAssets = true, updateFields = true, checkExternalCaller = false, payToContractOnly = true)
+    pub fn mint() -> () {
+        let minter = callerAddress!()
+        let (zone, offset, abbr) = timeZoneController.getItem()
+        let nftIndex = totalSupply
+        let (encodeImmutableFields, encodeMutableFields) = NFT.encodeFields!(selfContractId!(), nftIndex, zone, offset, abbr)
+
+        let contractId = copyCreateSubContractWithToken!{minter -> ALPH: 0.1 alph}(
+            toByteVec!(nftIndex),
+            nftTemplateId,
+            encodeImmutableFields,
+            encodeMutableFields,
+            1,
+            minter
+        )
+
+        totalSupply = totalSupply + 1
+
+        transferTokenToSelf!(minter, ALPH, Price)
+
+        emit Mint(minter, nftIndex, contractId)
+    }
+
+    // *  *  * Royalty *  *  * // 
+
+    pub fn royaltyAmount(@unused tokenId: ByteVec, salePrice: U256) -> (U256) {
+        return salePrice * RoyaltyRate / 10000
+    }
+
+    @using(assetsInContract = true, preapprovedAssets = true, checkExternalCaller = false)
+    pub fn payRoyalty(payer_: Address, amount_: U256) -> () {
+        transferTokenToSelf!(payer_, ALPH, amount_)
+    }
+
+    @using(checkExternalCaller = false)
+    pub fn withdrawRoyalty(to_: Address, amount_: U256) -> () {
+        // checks caller in withdrawAlph
+        withdrawAlph(to_, amount_)
+    }
+
+    // *  *  * Admin *  *  * // 
+
+    @using(assetsInContract = true)
+    pub fn withdrawAlph(to_: Address,amount_: U256) -> (){
+        checkCaller!(callerAddress!() == owner, ErrorCodes.CollectionOwnerAllowedOnly)
+        transferTokenFromSelf!(to_, ALPH, amount_)
+    }
+
+    @using(checkExternalCaller = false)
+    pub fn destroyInfrastructure() -> () {
+        // safe to call, will only destroy when all nfts are minted.
+        // does not affect the nfts themselves
+        // all remaining alphs will be sent to owner
+        timeZoneController.destroy()
+    }
+}

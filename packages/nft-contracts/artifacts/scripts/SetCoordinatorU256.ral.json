@@ -1,0 +1,31 @@
+{
+  "version": "v2.14.8",
+  "name": "SetCoordinatorU256",
+  "bytecodeTemplate": "01010300000005{1}0d0c{0}0103",
+  "fieldsSig": {
+    "names": [
+      "splice",
+      "address"
+    ],
+    "types": [
+      "TimeZoneSpliceU256",
+      "Address"
+    ],
+    "isMutable": [
+      false,
+      false
+    ]
+  },
+  "functions": [
+    {
+      "name": "main",
+      "usePreapprovedAssets": true,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "boilerplate",
+  "module": "index.ts",
+  "scripts": {
+    "faucet": "bun ./faucet.ts",
+    "start:devnet": "cd services/devnet && docker compose up -d",
+    "stop:devnet": "cd services/devnet && docker compose down",
+    "compile": "turbo compile --",
+    "lint": "turbo lint --",
+    "deploy": "turbo deploy --",
+    "dev": "turbo dev --",
+    "test": "turbo test --"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.7.3",
+    "@types/bun": "latest",
+    "turbo": "^1.13.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ]
+}

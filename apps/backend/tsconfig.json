@@ -1,0 +1,45 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"jsx": "react-jsx",
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"jsxImportSource": "hono/jsx",
+		"baseUrl": "./",
+		"paths": {
+			"@/*": ["src/*"]
+			// "@repo/*": ["../../packages/*"]
+		}
+		// "target": "ES2019",
+		// "module": "CommonJS",
+		// "baseUrl": ".",
+		// "paths": {
+		// 	"~/*": ["src/*"]
+		// },
+		// "allowJs": true,
+		// "alwaysStrict": true,
+		// "allowSyntheticDefaultImports": true,
+		// "resolveJsonModule": true,
+		// "noImplicitAny": true,
+		// "lib": ["es2020"],
+		// "outDir": "./dist",
+		// "rootDir": "./src",
+		// "forceConsistentCasingInFileNames": true,
+		// "typeRoots": ["types", "node_modules/@types", "node_modules/types"],
+
+		// "composite": false,
+		// "declaration": true,
+		// "declarationMap": true,
+		// "esModuleInterop": true,
+		// "forceConsistentCasingInFileNames": true,
+		// "inlineSources": false,
+		// "isolatedModules": true,
+		// "moduleResolution": "node",
+		// "noUnusedLocals": false,
+		// "noUnusedParameters": false,
+		// "preserveWatchOutput": true,
+		// "skipLibCheck": true,
+		// "strict": true
+	},
+	"include": ["src/**/*.ts", "src/**/*.tsx"]
+}

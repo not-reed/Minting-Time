@@ -1,0 +1,28 @@
+{
+  "version": "v2.14.8",
+  "name": "Destroy",
+  "bytecodeTemplate": "010103000000040c0c{0}0109",
+  "fieldsSig": {
+    "names": [
+      "nftCollectionId"
+    ],
+    "types": [
+      "NFTCollection"
+    ],
+    "isMutable": [
+      false
+    ]
+  },
+  "functions": [
+    {
+      "name": "main",
+      "usePreapprovedAssets": true,
+      "useAssetsInContract": false,
+      "isPublic": true,
+      "paramNames": [],
+      "paramTypes": [],
+      "paramIsMutable": [],
+      "returnTypes": []
+    }
+  ]
+}

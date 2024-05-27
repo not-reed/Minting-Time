@@ -1,0 +1,3 @@
+TxScript MintNFT(nftCollectionId: NFTCollection) {
+    nftCollectionId.mint{callerAddress!() -> ALPH: 5.1 alph}()
+}
