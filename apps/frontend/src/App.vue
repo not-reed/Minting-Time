@@ -41,7 +41,7 @@ setInterval(() => {
 	if (account.address) {
 		syncBalances()
 	}
-}, 1000)
+}, 5_000)
 
 // const withdrawAmount = ref('0');
 const fields = computed(() => ({

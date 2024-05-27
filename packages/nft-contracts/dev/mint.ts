@@ -1,16 +1,16 @@
 import { MintNFT } from "../artifacts/ts";
 import { PrivateKeyWallet } from "@alephium/web3-wallet";
-import { testPrivateKey } from "@alephium/web3-test";
 import { NodeProvider, ONE_ALPH, DUST_AMOUNT } from "@alephium/web3";
 import { loadDeployments } from "artifacts/ts/deployments";
 import config from "../alephium.config";
+import { validateNetwork } from "./utils";
 
-const NETWORK: "devnet" | "testnet" = "devnet";
+const NETWORK = validateNetwork(["devnet", "testnet"]);
 
 const deployments = loadDeployments(NETWORK);
 
 const signer = new PrivateKeyWallet({
-	privateKey: testPrivateKey,
+	privateKey: config.networks[NETWORK].privateKeys[0],
 	nodeProvider: new NodeProvider(config.networks[NETWORK].nodeUrl),
 });
 

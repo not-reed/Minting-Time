@@ -15,8 +15,9 @@
     "test:watch": "fd -e .ts | entr -r bun test"
   },
   "devDependencies": {
+    "@repo/web3": "workspace:*",
     "@types/bun": "latest",
-    "@repo/web3": "workspace:*"
+    "@types/node": "^20.12.12"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
