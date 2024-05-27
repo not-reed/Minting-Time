@@ -2,10 +2,6 @@
 import { VueFinalModal } from "vue-final-modal";
 import { AlephiumConnect, useConnect } from "@alphpro/web3-vue";
 
-defineProps<{
-	title?: string;
-}>();
-
 const emit = defineEmits<(e: "confirm") => void>();
 
 const { onConnect, onDisconnect } = useConnect();

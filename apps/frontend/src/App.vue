@@ -54,7 +54,6 @@ const fields = computed(() => ({
 const { open, close } = useModal({
 	component: AlephiumConnectModal,
 	attrs: {
-		title: "Hello World!",
 		onConfirm() {
 			close();
 		},
@@ -103,7 +102,7 @@ const pendingTransaction = ref(false)
 						</div> Connect To Mint
 					</button>
 					<AlephiumExecute :txScript="MintNFT" :fields="fields" v-slot="{ execute }" v-else>
-						<button @click="execute" @txInitiated="pendingTransaction = true"
+						<button @click="() => { pendingTransaction = true; execute() }"
 							@txConfirmed="pendingTransaction = false"
 							class="border text-6xl flex max-w-xl justify-start items-center gap-8 bg-zinc-900 hover:bg-black rounded-lg p-4 shadow-lg hover:shadow-xl transition hover:-translate-y-px hover:-translate-x-px active:translate-y-1 active:translate-x-1 active:shadow active:scale-[0.97] active:bg-zinc-800">
 							<div class="h-12 w-12">
