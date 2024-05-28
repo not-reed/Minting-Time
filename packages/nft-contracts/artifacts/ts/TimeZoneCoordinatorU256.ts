@@ -140,7 +140,7 @@ export const TimeZoneCoordinatorU256 = new Factory(
   Contract.fromJson(
     TimeZoneCoordinatorU256ContractJson,
     "",
-    "2c3736c953c6f234dc53a11198d63da8dbf43779a018f7bb947c8f82063f9515",
+    "8239b268a449f089185df76a01b4ae3ed6ddcf1434f7533224772eead92a8022",
     []
   )
 );

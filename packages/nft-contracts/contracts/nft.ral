@@ -144,4 +144,12 @@ Contract NFT(collectionId: ByteVec, nftIndex: U256, zone: ByteVec, offset: I256,
 
     return result ++ paddingStr
   }
+
+  @using(preapprovedAssets = true, assetsInContract = true, checkExternalCaller = false)
+  pub fn burn() -> () {
+    let caller = callerAddress!()
+    burnToken!(caller, selfTokenId!(), 1)
+    NFTCollection(collectionId).burnToken(nftIndex)
+    destroySelf!(caller)
+  }
 }

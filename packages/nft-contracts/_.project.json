@@ -1,0 +1,153 @@
+{
+  "fullNodeVersion": "v2.14.6",
+  "compilerOptionsUsed": {
+    "ignoreUnusedConstantsWarnings": false,
+    "ignoreUnusedVariablesWarnings": false,
+    "ignoreUnusedFieldsWarnings": false,
+    "ignoreUnusedPrivateFunctionsWarnings": false,
+    "ignoreUpdateFieldsCheckWarnings": false,
+    "ignoreCheckExternalCallerWarnings": false
+  },
+  "infos": {
+    "BurnNFT": {
+      "sourceFile": "scripts/BurnNFT.ral",
+      "sourceCodeHash": "3cc4710af2e40a86e0d0e8905d4889159182fb4300f7c359d79dc46164c7b5d1",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "Destroy": {
+      "sourceFile": "scripts/Destroy.ral",
+      "sourceCodeHash": "22101917a8f7da8a53bc97fe40974802ba135f6960e47c45a2703419750e2c7a",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "INFT": {
+      "sourceFile": "../../../node_modules/@alephium/web3/std/nft_interface.ral",
+      "sourceCodeHash": "7f7514adf9fee057049d1c162701725b3377c01a0a102e6f0f5cf747039926b6",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "INFTCollection": {
+      "sourceFile": "../../../node_modules/@alephium/web3/std/nft_collection_interface.ral",
+      "sourceCodeHash": "06648d34b65081500e038a943eb81d66301b43252b447d8cb96e0c8f2095edf8",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "INFTCollectionWithRoyalty": {
+      "sourceFile": "../../../node_modules/@alephium/web3/std/nft_collection_with_royalty_interface.ral",
+      "sourceCodeHash": "9f325c739267074d442f0da4536fd68baeb9571ef220e29cca6bc173af24b232",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "MintNFT": {
+      "sourceFile": "scripts/MintNFT.ral",
+      "sourceCodeHash": "2d0ec9aa3333bb11d9e41d0d880276d8c4cd51b328035d471cd618908b21bbbe",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "NFT": {
+      "sourceFile": "nft.ral",
+      "sourceCodeHash": "f4e1cf4347c494734e50ecdc83834f6918f010e34f91fae0901f3ff53c06ae9b",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "02465b88feae3ed4442c4b2944511fc80f5586f58a109c7d5f06b43265735006",
+      "warnings": []
+    },
+    "NFTCollection": {
+      "sourceFile": "collection.ral",
+      "sourceCodeHash": "53e0bc076178391aaa7894ccd78ddac42dca062a0c3775109d7b3d548fc300ee",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "a93e23816d515ceaaf70cfc1fe3124695b341c278f67971ac8b12a091e30da6e",
+      "warnings": []
+    },
+    "SetCollection": {
+      "sourceFile": "scripts/SetCoordinator.ral",
+      "sourceCodeHash": "ea437a59f0e5fec47320da4b323becb1ad10e08dbeb5912e32f26d2ba8062ba7",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "SetControllerByteVec": {
+      "sourceFile": "scripts/SetCoordinator.ral",
+      "sourceCodeHash": "ea437a59f0e5fec47320da4b323becb1ad10e08dbeb5912e32f26d2ba8062ba7",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "SetControllerU256": {
+      "sourceFile": "scripts/SetCoordinator.ral",
+      "sourceCodeHash": "ea437a59f0e5fec47320da4b323becb1ad10e08dbeb5912e32f26d2ba8062ba7",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "SetCoordinatorByteVec": {
+      "sourceFile": "scripts/SetCoordinator.ral",
+      "sourceCodeHash": "ea437a59f0e5fec47320da4b323becb1ad10e08dbeb5912e32f26d2ba8062ba7",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "SetCoordinatorU256": {
+      "sourceFile": "scripts/SetCoordinator.ral",
+      "sourceCodeHash": "ea437a59f0e5fec47320da4b323becb1ad10e08dbeb5912e32f26d2ba8062ba7",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "Setprice": {
+      "sourceFile": "scripts/SetPrice.ral",
+      "sourceCodeHash": "d5175c1b8ef306f9818dfd804c3346fa79b6c6d3e19ffa653e7cb770d022cb2c",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
+    "TimeZoneController": {
+      "sourceFile": "TimeZoneController.ral",
+      "sourceCodeHash": "d80a18447ac9d8f49f1c702f6221c119bdd651d39a8f0e79fcb7b038b43da63c",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "783a1b4487881b694bd9723ccdac97a90a2c9a3e3ae3b75929f919a2c0644f21",
+      "warnings": []
+    },
+    "TimeZoneCoordinatorByteVec": {
+      "sourceFile": "TimeZoneCoordinatorByteVec.ral",
+      "sourceCodeHash": "d8efeb761a139bbd3839e3cc9a9cbd58b34242e8564ecaba4d7b1a4881f68c64",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "f446a628c2291d8eba4955b96d7f49628fcf4d9ed3b4ca4aed91dd05e155d813",
+      "warnings": []
+    },
+    "TimeZoneCoordinatorU256": {
+      "sourceFile": "TimeZoneCoordinatorU256.ral",
+      "sourceCodeHash": "e1dade39c419a9d497d23a6f36864858d7cdafcbf8a64231c9931dd59fe5ed88",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "24f95ed82b673959550ee16c117003b6c969aeddb9964e98fd8166eb4ef21880",
+      "warnings": []
+    },
+    "TimeZoneSpliceByteVec": {
+      "sourceFile": "TimeZoneSpliceByteVec.ral",
+      "sourceCodeHash": "0a67566477679cdaadca2734fddffd555a05cd0cfed576e648220456b28cdfb5",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "1e8dd9368f3365aa3816ec091f895b15ee0766c27a3b3b39c06ffbc10d64060e",
+      "warnings": []
+    },
+    "TimeZoneSpliceU256": {
+      "sourceFile": "TimeZoneSpliceU256.ral",
+      "sourceCodeHash": "6c9c5892678781c27dca165ad3c7b91af876a7e168145e17b4a1347535940062",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "7a0c7f8efec8b59c06cb14eaef4754fe210848b68bdff619e2ebe79df5df1b9e",
+      "warnings": []
+    },
+    "Withdraw": {
+      "sourceFile": "scripts/Withdraw.ral",
+      "sourceCodeHash": "9705a7315594e5edfc6e7516575e3d21cb4b27ed5d33b9bfc7e191a49b32aa3d",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    }
+  }
+}

@@ -2,9 +2,8 @@ import { PrivateKeyWallet } from "@alephium/web3-wallet";
 import { NodeProvider, ONE_ALPH, ALPH_TOKEN_ID } from "@alephium/web3";
 import { transfer } from "@repo/web3/src/test";
 import config from "../alephium.config";
-import { validateNetwork } from "./utils";
 
-const NETWORK = validateNetwork(["devnet"]);
+const NETWORK = "devnet";
 
 const signer = new PrivateKeyWallet({
 	privateKey: config.networks[NETWORK].privateKeys[0],

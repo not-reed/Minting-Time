@@ -5,18 +5,29 @@ Contract NFTCollection(
     nftTemplateId: ByteVec,
     timeZoneController: TimeZoneController,
     owner: Address,
-    mut totalSupply: U256
+    mut totalSupply: U256,
+    mut price: U256
 ) implements INFTCollection {
 
     event Mint(minter: Address, index: U256, nft: ByteVec)
 
-    const Price = 5 alph
     const RoyaltyRate = 500 // 5%
 
     enum ErrorCodes {
         NFTNotFound = 0
         CollectionOwnerAllowedOnly = 1
         NFTNotPartOfCollection = 2
+        Unburnable = 3
+    }
+
+    @using(updateFields = true)
+    pub fn setPrice(price_: U256) -> () {
+        checkCaller!(owner == callerAddress!(), ErrorCodes.CollectionOwnerAllowedOnly)
+        price = price_
+    }
+
+    pub fn getPrice() -> U256 {
+        return price
     }
 
     pub fn getCollectionUri() -> ByteVec {
@@ -47,7 +58,7 @@ Contract NFTCollection(
         let nftIndex = totalSupply
         let (encodeImmutableFields, encodeMutableFields) = NFT.encodeFields!(selfContractId!(), nftIndex, zone, offset, abbr)
 
-        let contractId = copyCreateSubContractWithToken!{minter -> ALPH: 0.1 alph}(
+        let contractId = copyCreateSubContractWithToken!{minter -> ALPH: minimalContractDeposit!()}(
             toByteVec!(nftIndex),
             nftTemplateId,
             encodeImmutableFields,
@@ -58,7 +69,7 @@ Contract NFTCollection(
 
         totalSupply = totalSupply + 1
 
-        transferTokenToSelf!(minter, ALPH, Price)
+        transferTokenToSelf!(minter, ALPH, price)
 
         emit Mint(minter, nftIndex, contractId)
     }
@@ -94,5 +105,13 @@ Contract NFTCollection(
         // does not affect the nfts themselves
         // all remaining alphs will be sent to owner
         timeZoneController.destroy()
+    }
+
+    @using(updateFields = true)
+    pub fn burnToken(nftIndex: U256) -> () {
+        let caller = callerContractId!()
+        let check = subContractId!(toByteVec!(nftIndex))
+        checkCaller!(caller == check, ErrorCodes.Unburnable)
+        totalSupply = totalSupply - 1
     }
 }

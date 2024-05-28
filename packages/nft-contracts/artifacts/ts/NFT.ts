@@ -246,6 +246,14 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
       return testMethod(this, "addPadding", params);
     },
+    burn: async (
+      params: Omit<
+        TestContractParamsWithoutMaps<NFTTypes.Fields, never>,
+        "testArgs"
+      >
+    ): Promise<TestContractResultWithoutMaps<null>> => {
+      return testMethod(this, "burn", params);
+    },
   };
 }
 
@@ -254,7 +262,7 @@ export const NFT = new Factory(
   Contract.fromJson(
     NFTContractJson,
     "",
-    "3f22b514b3de96a0ffcd1f8b83c5edf59c9fac4d89eb0720641e72edc1d6bbd8",
+    "3bafad2d589931274be3a4cc137cfdea6468907f0007064b1ddd0dd03693146d",
     []
   )
 );

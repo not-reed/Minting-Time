@@ -138,7 +138,7 @@ export const TimeZoneCoordinatorByteVec = new Factory(
   Contract.fromJson(
     TimeZoneCoordinatorByteVecContractJson,
     "",
-    "fed28b98a16da7eae80100bd1ef6e6bf926122c1ad3e7374f615b349d36fa648",
+    "2e02e5af70238b597d6abf3451cd4d7f5eeb4279f6d53966c1642dfb36ebedf4",
     []
   )
 );

@@ -52,11 +52,11 @@ Contract TimeZoneCoordinatorByteVec(
 
     @using(assetsInContract = true, checkExternalCaller = false)
     pub fn destroy() -> () {
-        if (minted >= 126) {
+        if (minted > 126 && contractExists!(contractId!(spliceThree))) {
             spliceThree.destroy()
         }
 
-        if (minted >= 252) {
+        if (minted > 252 && contractExists!(contractId!(spliceTwo))) {
             spliceTwo.destroy()
         }
 

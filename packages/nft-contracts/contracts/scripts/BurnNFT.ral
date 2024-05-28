@@ -1,0 +1,3 @@
+TxScript BurnNFT(nft: ByteVec) {
+    NFT(nft).burn{callerAddress!() -> nft: 1}()
+}

@@ -1,0 +1,3 @@
+TxScript Setprice(collection: NFTCollection, price: U256) {
+    collection.setPrice(price)
+}

@@ -264,7 +264,7 @@ export const TimeZoneSpliceByteVec = new Factory(
   Contract.fromJson(
     TimeZoneSpliceByteVecContractJson,
     "",
-    "1e8dd9368f3365aa3816ec091f895b15ee0766c27a3b3b39c06ffbc10d64060e",
+    "01c447ca2123a08d47b961762ad5e4c3bde21c4b8a300baf737411f85c374b54",
     []
   )
 );

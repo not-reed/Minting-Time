@@ -1,3 +1,4 @@
-TxScript MintNFT(nftCollectionId: NFTCollection) {
-    nftCollectionId.mint{callerAddress!() -> ALPH: 5.1 alph}()
+TxScript MintNFT(collection: NFTCollection) {
+    let price = collection.getPrice() + minimalContractDeposit!()
+    collection.mint{callerAddress!() -> ALPH: price}()
 }

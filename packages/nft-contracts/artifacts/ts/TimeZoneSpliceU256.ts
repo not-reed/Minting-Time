@@ -214,7 +214,7 @@ export const TimeZoneSpliceU256 = new Factory(
   Contract.fromJson(
     TimeZoneSpliceU256ContractJson,
     "",
-    "7a0c7f8efec8b59c06cb14eaef4754fe210848b68bdff619e2ebe79df5df1b9e",
+    "729581b64923a70ad7ed241b656e8dcae139c7021ac06d73dc7e18b6d085c1f8",
     []
   )
 );

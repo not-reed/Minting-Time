@@ -63,19 +63,19 @@ Contract TimeZoneCoordinatorU256(
 
     @using(assetsInContract = true, checkExternalCaller = false)
     pub fn destroy() -> () {
-        if (minted >= 76) {
+        if (minted > 76 && contractExists!(contractId!(spliceFive))) {
             spliceFive.destroy()
         }
 
-        if (minted >= 152) {
+        if (minted > 152 && contractExists!(contractId!(spliceFour))) {
             spliceFour.destroy()
         }
 
-        if (minted >= 228) {
+        if (minted > 228 && contractExists!(contractId!(spliceThree))) {
             spliceThree.destroy()
         }
 
-        if (minted >= 304) {
+        if (minted > 304 && contractExists!(contractId!(spliceTwo))) {
             spliceTwo.destroy()
         }
 

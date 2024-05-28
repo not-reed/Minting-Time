@@ -42,7 +42,7 @@ Contract TimeZoneController(
     fn getRandom() -> (U256){
         let remaining = MAX_SUPPLY - minted
         let seed = u256From32Byte!(blake2b!(toByteVec!(blockTarget!()) ++ toByteVec!(blockTimeStamp!())))
-        return addModN!(0,seed, remaining)
+        return seed % remaining
     }
 
     @using(assetsInContract = true, checkExternalCaller = false)

@@ -146,7 +146,7 @@ export const TimeZoneController = new Factory(
   Contract.fromJson(
     TimeZoneControllerContractJson,
     "",
-    "32b94ad1f49bdc5b76ffa6abb79b86e4b29386b0b582897aa6eefdc4258f7d96",
+    "2d9b1f60a2f8c25143221e83c071a10e7c55091847e5652c51842abfaf127f75",
     []
   )
 );

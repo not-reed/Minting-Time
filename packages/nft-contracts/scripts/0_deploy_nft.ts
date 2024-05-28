@@ -1,6 +1,11 @@
 import type { Deployer, DeployFunction } from "@repo/web3/cli";
 import type { Settings } from "../alephium.config";
-import { stringToHex, ZERO_ADDRESS } from "@alephium/web3";
+import {
+	stringToHex,
+	ZERO_ADDRESS,
+	type DeployContractResult,
+	type ContractInstance,
+} from "@alephium/web3";
 import {
 	NFT,
 	NFTCollection,
@@ -812,34 +817,56 @@ const offsets = [
 	39600, 36000, -36000, 36000, -36000, 43200, 46800, 43200, 43200,
 ].map((a) => BigInt(a));
 
+function logDeploy(
+	name: string,
+	contract: DeployContractResult<ContractInstance>,
+) {
+	console.log(`Deployed ${name} at ${contract.contractInstance.address}`);
+}
 const deployFaucet: DeployFunction<Settings> = async (
 	deployer: Deployer,
 ): Promise<void> => {
-	const zoneSpliceOne = await deployer.deployContract(TimeZoneSpliceByteVec, {
-		initialFields: {
-			owner: deployer.account.address,
-			coordinator: ZERO_ADDRESS,
-			start: 0n,
-			fields: zones.splice(0, 126),
+	const zoneSpliceOne = await deployer.deployContract(
+		TimeZoneSpliceByteVec,
+		{
+			initialFields: {
+				owner: deployer.account.address,
+				coordinator: ZERO_ADDRESS,
+				start: 0n,
+				fields: zones.splice(0, 126),
+			},
 		},
-	});
-	const zoneSpliceTwo = await deployer.deployContract(TimeZoneSpliceByteVec, {
-		initialFields: {
-			owner: deployer.account.address,
-			coordinator: ZERO_ADDRESS,
-			start: 126n,
-			fields: zones.splice(0, 126),
-		},
-	});
-	const zoneSpliceThree = await deployer.deployContract(TimeZoneSpliceByteVec, {
-		initialFields: {
-			owner: deployer.account.address,
-			coordinator: ZERO_ADDRESS,
-			start: 252n,
-			fields: zones.splice(0, 126).concat(stringToHex("")),
-		},
-	});
+		"zones_0",
+	);
+	logDeploy("TimeZoneSpliceByteVec:zones_0", zoneSpliceOne);
 
+	const zoneSpliceTwo = await deployer.deployContract(
+		TimeZoneSpliceByteVec,
+		{
+			initialFields: {
+				owner: deployer.account.address,
+				coordinator: ZERO_ADDRESS,
+				start: 126n,
+				fields: zones.splice(0, 126),
+			},
+		},
+		"zones_1",
+	);
+	logDeploy("TimeZoneSpliceByteVec:zones_1", zoneSpliceTwo);
+	const zoneSpliceThree = await deployer.deployContract(
+		TimeZoneSpliceByteVec,
+		{
+			initialFields: {
+				owner: deployer.account.address,
+				coordinator: ZERO_ADDRESS,
+				start: 252n,
+				fields: zones.splice(0, 126).concat(stringToHex("")),
+			},
+		},
+		"zones_2",
+	);
+
+	logDeploy("TimeZoneSpliceByteVec:zones_2", zoneSpliceThree);
 	const zoneCoordinator = await deployer.deployContract(
 		TimeZoneCoordinatorByteVec,
 		{
@@ -852,8 +879,10 @@ const deployFaucet: DeployFunction<Settings> = async (
 				minted: 0n,
 			},
 		},
+		"zones_coordinator",
 	);
 
+	logDeploy("TimeZoneCoordinatorByteVec:zones_coordinator", zoneCoordinator);
 	await deployer.runScript(SetCoordinatorByteVec, {
 		initialFields: {
 			splice: zoneSpliceOne.contractInstance.contractId,
@@ -876,31 +905,46 @@ const deployFaucet: DeployFunction<Settings> = async (
 	});
 
 	/** Abbreviations */
-	const abbrSpliceOne = await deployer.deployContract(TimeZoneSpliceByteVec, {
-		initialFields: {
-			owner: deployer.account.address,
-			coordinator: ZERO_ADDRESS,
-			start: 0n,
-			fields: abbrs.splice(0, 126),
+	const abbrSpliceOne = await deployer.deployContract(
+		TimeZoneSpliceByteVec,
+		{
+			initialFields: {
+				owner: deployer.account.address,
+				coordinator: ZERO_ADDRESS,
+				start: 0n,
+				fields: abbrs.splice(0, 126),
+			},
 		},
-	});
-	const abbrSpliceTwo = await deployer.deployContract(TimeZoneSpliceByteVec, {
-		initialFields: {
-			owner: deployer.account.address,
-			coordinator: ZERO_ADDRESS,
-			start: 126n,
-			fields: abbrs.splice(0, 126),
+		"abbr_0",
+	);
+	logDeploy("TimeZoneSpliceByteVec:abbr_0", abbrSpliceOne);
+	const abbrSpliceTwo = await deployer.deployContract(
+		TimeZoneSpliceByteVec,
+		{
+			initialFields: {
+				owner: deployer.account.address,
+				coordinator: ZERO_ADDRESS,
+				start: 126n,
+				fields: abbrs.splice(0, 126),
+			},
 		},
-	});
-	const abbrSpliceThree = await deployer.deployContract(TimeZoneSpliceByteVec, {
-		initialFields: {
-			owner: deployer.account.address,
-			coordinator: ZERO_ADDRESS,
-			start: 252n,
-			fields: abbrs.splice(0, 126).concat(stringToHex("")),
+		"abbr_1",
+	);
+	logDeploy("TimeZoneSpliceByteVec:abbr_1", abbrSpliceTwo);
+	const abbrSpliceThree = await deployer.deployContract(
+		TimeZoneSpliceByteVec,
+		{
+			initialFields: {
+				owner: deployer.account.address,
+				coordinator: ZERO_ADDRESS,
+				start: 252n,
+				fields: abbrs.splice(0, 126).concat(stringToHex("")),
+			},
 		},
-	});
+		"abbr_2",
+	);
 
+	logDeploy("TimeZoneSpliceByteVec:abbr_2", abbrSpliceThree);
 	const abbrCoordinator = await deployer.deployContract(
 		TimeZoneCoordinatorByteVec,
 		{
@@ -913,8 +957,10 @@ const deployFaucet: DeployFunction<Settings> = async (
 				minted: 0n,
 			},
 		},
+		"abbr_coordinator",
 	);
 
+	logDeploy("TimeZoneCoordinatorByteVec:abbr_coordinator", abbrCoordinator);
 	await deployer.runScript(SetCoordinatorByteVec, {
 		initialFields: {
 			splice: abbrSpliceOne.contractInstance.contractId,
@@ -937,47 +983,72 @@ const deployFaucet: DeployFunction<Settings> = async (
 	});
 
 	/** Offsets */
-	const offsetSpliceOne = await deployer.deployContract(TimeZoneSpliceU256, {
-		initialFields: {
-			owner: deployer.account.address,
-			coordinator: ZERO_ADDRESS,
-			start: 0n,
-			fields: offsets.splice(0, 76),
+	const offsetSpliceOne = await deployer.deployContract(
+		TimeZoneSpliceU256,
+		{
+			initialFields: {
+				owner: deployer.account.address,
+				coordinator: ZERO_ADDRESS,
+				start: 0n,
+				fields: offsets.splice(0, 76),
+			},
 		},
-	});
-	const offsetSpliceTwo = await deployer.deployContract(TimeZoneSpliceU256, {
-		initialFields: {
-			owner: deployer.account.address,
-			coordinator: ZERO_ADDRESS,
-			start: 76n,
-			fields: offsets.splice(0, 76),
+		"offset_0",
+	);
+	logDeploy("TimeZoneSpliceU256:offset_0", offsetSpliceOne);
+	const offsetSpliceTwo = await deployer.deployContract(
+		TimeZoneSpliceU256,
+		{
+			initialFields: {
+				owner: deployer.account.address,
+				coordinator: ZERO_ADDRESS,
+				start: 76n,
+				fields: offsets.splice(0, 76),
+			},
 		},
-	});
-	const offsetSpliceThree = await deployer.deployContract(TimeZoneSpliceU256, {
-		initialFields: {
-			owner: deployer.account.address,
-			coordinator: ZERO_ADDRESS,
-			start: 76n * 2n,
-			fields: offsets.splice(0, 76),
+		"offset_1",
+	);
+	logDeploy("TimeZoneSpliceU256:offset_1", offsetSpliceTwo);
+	const offsetSpliceThree = await deployer.deployContract(
+		TimeZoneSpliceU256,
+		{
+			initialFields: {
+				owner: deployer.account.address,
+				coordinator: ZERO_ADDRESS,
+				start: 76n * 2n,
+				fields: offsets.splice(0, 76),
+			},
 		},
-	});
-	const offsetSpliceFour = await deployer.deployContract(TimeZoneSpliceU256, {
-		initialFields: {
-			owner: deployer.account.address,
-			coordinator: ZERO_ADDRESS,
-			start: 76n * 3n,
-			fields: offsets.splice(0, 76),
+		"offset_2",
+	);
+	logDeploy("TimeZoneSpliceU256:offset_2", offsetSpliceThree);
+	const offsetSpliceFour = await deployer.deployContract(
+		TimeZoneSpliceU256,
+		{
+			initialFields: {
+				owner: deployer.account.address,
+				coordinator: ZERO_ADDRESS,
+				start: 76n * 3n,
+				fields: offsets.splice(0, 76),
+			},
 		},
-	});
-	const offsetSpliceFive = await deployer.deployContract(TimeZoneSpliceU256, {
-		initialFields: {
-			owner: deployer.account.address,
-			coordinator: ZERO_ADDRESS,
-			start: 76n * 4n,
-			fields: offsets.splice(0, 76).concat(0n, 0n, 0n),
+		"offset_3",
+	);
+	logDeploy("TimeZoneSpliceU256:offset_3", offsetSpliceFour);
+	const offsetSpliceFive = await deployer.deployContract(
+		TimeZoneSpliceU256,
+		{
+			initialFields: {
+				owner: deployer.account.address,
+				coordinator: ZERO_ADDRESS,
+				start: 76n * 4n,
+				fields: offsets.splice(0, 76).concat(0n, 0n, 0n),
+			},
 		},
-	});
+		"offset_4",
+	);
 
+	logDeploy("TimeZoneSpliceU256:offset_4", offsetSpliceFive);
 	const offsetCoordinator = await deployer.deployContract(
 		TimeZoneCoordinatorU256,
 		{
@@ -992,8 +1063,10 @@ const deployFaucet: DeployFunction<Settings> = async (
 				minted: 0n,
 			},
 		},
+		"offset_coordinator",
 	);
 
+	logDeploy("TimeZoneCoordinatorU256:offset_coordinator", offsetCoordinator);
 	await deployer.runScript(SetCoordinatorU256, {
 		initialFields: {
 			splice: offsetSpliceOne.contractInstance.contractId,
@@ -1039,6 +1112,7 @@ const deployFaucet: DeployFunction<Settings> = async (
 		},
 	});
 
+	logDeploy("TimeZoneController", tz);
 	await deployer.runScript(SetControllerByteVec, {
 		initialFields: {
 			splice: abbrCoordinator.contractInstance.contractId,
@@ -1067,16 +1141,7 @@ const deployFaucet: DeployFunction<Settings> = async (
 			abbr: stringToHex(""),
 		},
 	});
-	console.log(
-		"**************************************************************************************",
-	);
-
-	console.log(
-		`NFT Template contract id: ${nftTemplateResult.contractInstance.contractId}`,
-	);
-	console.log(
-		`NFT Template contract address: ${nftTemplateResult.contractInstance.address}`,
-	);
+	logDeploy("NFT", nftTemplateResult);
 
 	const nftCollectionResult = await deployer.deployContract(NFTCollection, {
 		initialFields: {
@@ -1084,15 +1149,10 @@ const deployFaucet: DeployFunction<Settings> = async (
 			owner: deployer.account.address,
 			totalSupply: 0n,
 			timeZoneController: tz.contractInstance.contractId,
+			price: 5n * 10n ** 18n,
 		},
 	});
-
-	console.log(
-		`Collection contract id: ${nftCollectionResult.contractInstance.contractId}`,
-	);
-	console.log(
-		`Collection contract address: ${nftCollectionResult.contractInstance.address}`,
-	);
+	logDeploy("NFTCollection", nftCollectionResult);
 
 	await deployer.runScript(SetCollection, {
 		initialFields: {

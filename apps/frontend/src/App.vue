@@ -8,7 +8,7 @@ import AlephiumConnectModal from "./components/AlephiumConnectModal.vue";
 import { ONE_ALPH, DUST_AMOUNT } from "@alephium/web3";
 
 // biome-ignore lint/style/useImportType: biome bug thinks this is a type import because its only used in the template
-import { MintNFT } from "@repo/nft-contracts/artifacts/ts/scripts";
+import { MintNFT, BurnNFT } from "@repo/nft-contracts/artifacts/ts/scripts";
 
 import { computed, ref } from "vue";
 import { NETWORK, deployments } from "./data";
@@ -46,7 +46,7 @@ setInterval(() => {
 // const withdrawAmount = ref('0');
 const fields = computed(() => ({
 	initialFields: { 
-		nftCollectionId:
+		collection:
 				deployments.contracts.NFTCollection.contractInstance.contractId },
 	attoAlphAmount: ONE_ALPH * 5n + 100000000000000000n + DUST_AMOUNT,
 }) satisfies Parameters<typeof MintNFT.execute>[1]);
@@ -102,16 +102,17 @@ const pendingTransaction = ref(false)
 						</div> Connect To Mint
 					</button>
 					<AlephiumExecute :txScript="MintNFT" :fields="fields" v-slot="{ execute }" v-else>
-						<button @click="() => { pendingTransaction = true; execute() }"
-							@txConfirmed="pendingTransaction = false"
-							class="border text-6xl flex max-w-xl justify-start items-center gap-8 bg-zinc-900 hover:bg-black rounded-lg p-4 shadow-lg hover:shadow-xl transition hover:-translate-y-px hover:-translate-x-px active:translate-y-1 active:translate-x-1 active:shadow active:scale-[0.97] active:bg-zinc-800">
+						<button @click="execute" class=" border text-6xl flex max-w-xl justify-start items-center gap-8 bg-zinc-900 hover:bg-black rounded-lg p-4
+							shadow-lg hover:shadow-xl transition hover:-translate-y-px hover:-translate-x-px
+							active:translate-y-1 active:translate-x-1 active:shadow active:scale-[0.97]
+							active:bg-zinc-800">
 							<div class="h-12 w-12">
 								<svg xmlns="http://www.w3.org/2000/svg" stroke="#000"
 									:style="`transform: rotate(-90deg); --s: ${Math.floor(Math.random() * 60)}; --m: ${Math.floor(Math.random() * 60)}; --h: ${Math.floor(Math.random() * 12)}; `"
 									viewBox="0 0 40 40">
 									<use xlink:href="#clock-template" />
 								</svg>
-							</div>Mint: <span>5<span class="opacity-50">+1 ALPH</span></span>
+							</div>Mint: <span>5<span class="opacity-50">+.1 ALPH</span></span>
 						</button>
 					</AlephiumExecute>
 
@@ -173,6 +174,24 @@ const pendingTransaction = ref(false)
 								:key="clock.id">
 								<img :src="clock.metadata.image" alt="clock" class="h-24 w-24" />
 								<div>{{ decodeURIComponent(clock.metadata.name) }}</div>
+
+								<!-- <AlephiumExecute :txScript="BurnNFT" :fields="{
+	initialFields: { nft: clock.id },
+	tokens: [{ id: clock.id, amount: 1n }],
+}" v-slot="{ execute }">
+									<button @click="execute" class=" border text-6xl flex max-w-xl justify-start items-center gap-8 bg-zinc-900 hover:bg-black rounded-lg p-4
+							shadow-lg hover:shadow-xl transition hover:-translate-y-px hover:-translate-x-px
+							active:translate-y-1 active:translate-x-1 active:shadow active:scale-[0.97]
+							active:bg-zinc-800">
+										<div class="h-12 w-12">
+											<svg xmlns="http://www.w3.org/2000/svg" stroke="#000"
+												:style="`transform: rotate(-90deg); --s: ${Math.floor(Math.random() * 60)}; --m: ${Math.floor(Math.random() * 60)}; --h: ${Math.floor(Math.random() * 12)}; `"
+												viewBox="0 0 40 40">
+												<use xlink:href="#clock-template" />
+											</svg>
+										</div>BURN
+									</button>
+								</AlephiumExecute> -->
 							</div>
 						</TransitionGroup>
 					</template>

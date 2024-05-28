@@ -8,11 +8,11 @@ import {
 } from "@alephium/web3";
 import { cors } from "hono/cors";
 
-// const NETWORK = "devnet";
-// const NODE_URL = "http://127.0.0.1:22973";
+const NETWORK = "devnet";
+const NODE_URL = "http://127.0.0.1:22973";
 
-const NETWORK = "testnet";
-const NODE_URL = "https://node.testnet.alephium.org";
+// const NETWORK = "testnet";
+// const NODE_URL = "https://node.testnet.alephium.org";
 
 // devnet
 web3.setCurrentNodeProvider(NODE_URL);

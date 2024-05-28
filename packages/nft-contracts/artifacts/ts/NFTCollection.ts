@@ -38,6 +38,7 @@ export namespace NFTCollectionTypes {
     timeZoneController: HexString;
     owner: Address;
     totalSupply: bigint;
+    price: bigint;
   };
 
   export type State = ContractState<Fields>;
@@ -60,6 +61,10 @@ export namespace NFTCollectionTypes {
     nftByIndex: {
       params: CallContractParams<{ index: bigint }>;
       result: CallContractResult<HexString>;
+    };
+    getPrice: {
+      params: Omit<CallContractParams<{}>, "args">;
+      result: CallContractResult<bigint>;
     };
     royaltyAmount: {
       params: CallContractParams<{ tokenId: HexString; salePrice: bigint }>;
@@ -98,12 +103,12 @@ class Factory extends ContractFactory<
 
   eventIndex = { Mint: 0 };
   consts = {
-    Price: BigInt(5000000000000000000),
     RoyaltyRate: BigInt(500),
     ErrorCodes: {
       NFTNotFound: BigInt(0),
       CollectionOwnerAllowedOnly: BigInt(1),
       NFTNotPartOfCollection: BigInt(2),
+      Unburnable: BigInt(3),
     },
   };
 
@@ -143,6 +148,22 @@ class Factory extends ContractFactory<
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
       return testMethod(this, "validateNFT", params);
+    },
+    setPrice: async (
+      params: TestContractParamsWithoutMaps<
+        NFTCollectionTypes.Fields,
+        { price_: bigint }
+      >
+    ): Promise<TestContractResultWithoutMaps<null>> => {
+      return testMethod(this, "setPrice", params);
+    },
+    getPrice: async (
+      params: Omit<
+        TestContractParamsWithoutMaps<NFTCollectionTypes.Fields, never>,
+        "testArgs"
+      >
+    ): Promise<TestContractResultWithoutMaps<bigint>> => {
+      return testMethod(this, "getPrice", params);
     },
     mint: async (
       params: Omit<
@@ -192,6 +213,14 @@ class Factory extends ContractFactory<
     ): Promise<TestContractResultWithoutMaps<null>> => {
       return testMethod(this, "destroyInfrastructure", params);
     },
+    burnToken: async (
+      params: TestContractParamsWithoutMaps<
+        NFTCollectionTypes.Fields,
+        { nftIndex: bigint }
+      >
+    ): Promise<TestContractResultWithoutMaps<null>> => {
+      return testMethod(this, "burnToken", params);
+    },
   };
 }
 
@@ -200,7 +229,7 @@ export const NFTCollection = new Factory(
   Contract.fromJson(
     NFTCollectionContractJson,
     "",
-    "fad19cb20fec363fd60fb0f99e78f3429e8c4f9fa8a81a49628a9003d6d87f72",
+    "3582852e385b83785b15bfd555d52e7da9a35ba718e6e70ccf19c7147cd3fd4f",
     []
   )
 );
@@ -263,6 +292,17 @@ export class NFTCollectionInstance extends ContractInstance {
         this,
         "nftByIndex",
         params,
+        getContractByCodeHash
+      );
+    },
+    getPrice: async (
+      params?: NFTCollectionTypes.CallMethodParams<"getPrice">
+    ): Promise<NFTCollectionTypes.CallMethodResult<"getPrice">> => {
+      return callMethod(
+        NFTCollection,
+        this,
+        "getPrice",
+        params === undefined ? {} : params,
         getContractByCodeHash
       );
     },

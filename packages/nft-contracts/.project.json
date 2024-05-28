@@ -1,5 +1,5 @@
 {
-  "fullNodeVersion": "v2.14.6",
+  "fullNodeVersion": "v2.12.0",
   "compilerOptionsUsed": {
     "ignoreUnusedConstantsWarnings": false,
     "ignoreUnusedVariablesWarnings": false,
@@ -9,6 +9,13 @@
     "ignoreCheckExternalCallerWarnings": false
   },
   "infos": {
+    "BurnNFT": {
+      "sourceFile": "scripts/BurnNFT.ral",
+      "sourceCodeHash": "3cc4710af2e40a86e0d0e8905d4889159182fb4300f7c359d79dc46164c7b5d1",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
     "Destroy": {
       "sourceFile": "scripts/Destroy.ral",
       "sourceCodeHash": "22101917a8f7da8a53bc97fe40974802ba135f6960e47c45a2703419750e2c7a",
@@ -39,23 +46,23 @@
     },
     "MintNFT": {
       "sourceFile": "scripts/MintNFT.ral",
-      "sourceCodeHash": "b91ccb4491519b70a5ef9ac65bab318cdb9093edec1bc0bbf915f85476e60d5a",
+      "sourceCodeHash": "0bd13beec701468f5fb1573cd1b206d4656ef37ae139804be138c939e34373a0",
       "bytecodeDebugPatch": "",
       "codeHashDebug": "",
       "warnings": []
     },
     "NFT": {
       "sourceFile": "nft.ral",
-      "sourceCodeHash": "ff1246aaaabbe68294a1b2947018bb3511c16904d8b6b5bba1e07a53ae5ea1b5",
+      "sourceCodeHash": "f4e1cf4347c494734e50ecdc83834f6918f010e34f91fae0901f3ff53c06ae9b",
       "bytecodeDebugPatch": "",
-      "codeHashDebug": "3f22b514b3de96a0ffcd1f8b83c5edf59c9fac4d89eb0720641e72edc1d6bbd8",
+      "codeHashDebug": "3bafad2d589931274be3a4cc137cfdea6468907f0007064b1ddd0dd03693146d",
       "warnings": []
     },
     "NFTCollection": {
       "sourceFile": "collection.ral",
-      "sourceCodeHash": "bd3e76784a50cafe9d08e4f193348ca8f614a17459ee812fca3e2573f760aa37",
+      "sourceCodeHash": "76ebeab1b8d357fba48e523d70c513774b6676729768f978e563ed1fd3d3af7f",
       "bytecodeDebugPatch": "",
-      "codeHashDebug": "fad19cb20fec363fd60fb0f99e78f3429e8c4f9fa8a81a49628a9003d6d87f72",
+      "codeHashDebug": "3582852e385b83785b15bfd555d52e7da9a35ba718e6e70ccf19c7147cd3fd4f",
       "warnings": []
     },
     "SetCollection": {
@@ -93,39 +100,46 @@
       "codeHashDebug": "",
       "warnings": []
     },
+    "Setprice": {
+      "sourceFile": "scripts/SetPrice.ral",
+      "sourceCodeHash": "d5175c1b8ef306f9818dfd804c3346fa79b6c6d3e19ffa653e7cb770d022cb2c",
+      "bytecodeDebugPatch": "",
+      "codeHashDebug": "",
+      "warnings": []
+    },
     "TimeZoneController": {
       "sourceFile": "TimeZoneController.ral",
-      "sourceCodeHash": "1ead91b2837d6a12ba8f098ca6ee3744c94c98eeb12bf11207f0d8cf88887501",
+      "sourceCodeHash": "d80a18447ac9d8f49f1c702f6221c119bdd651d39a8f0e79fcb7b038b43da63c",
       "bytecodeDebugPatch": "",
-      "codeHashDebug": "32b94ad1f49bdc5b76ffa6abb79b86e4b29386b0b582897aa6eefdc4258f7d96",
+      "codeHashDebug": "2d9b1f60a2f8c25143221e83c071a10e7c55091847e5652c51842abfaf127f75",
       "warnings": []
     },
     "TimeZoneCoordinatorByteVec": {
       "sourceFile": "TimeZoneCoordinatorByteVec.ral",
-      "sourceCodeHash": "56fa78fcabe920020746ab396fe9aebe49e2ca114177dacf996f9a46df76c5ef",
+      "sourceCodeHash": "d8efeb761a139bbd3839e3cc9a9cbd58b34242e8564ecaba4d7b1a4881f68c64",
       "bytecodeDebugPatch": "",
-      "codeHashDebug": "fed28b98a16da7eae80100bd1ef6e6bf926122c1ad3e7374f615b349d36fa648",
+      "codeHashDebug": "2e02e5af70238b597d6abf3451cd4d7f5eeb4279f6d53966c1642dfb36ebedf4",
       "warnings": []
     },
     "TimeZoneCoordinatorU256": {
       "sourceFile": "TimeZoneCoordinatorU256.ral",
-      "sourceCodeHash": "07a7382e0adec04808c6f5a14fd7ccd183c52e5948bfe2fc89e9002634778463",
+      "sourceCodeHash": "e1dade39c419a9d497d23a6f36864858d7cdafcbf8a64231c9931dd59fe5ed88",
       "bytecodeDebugPatch": "",
-      "codeHashDebug": "2c3736c953c6f234dc53a11198d63da8dbf43779a018f7bb947c8f82063f9515",
+      "codeHashDebug": "8239b268a449f089185df76a01b4ae3ed6ddcf1434f7533224772eead92a8022",
       "warnings": []
     },
     "TimeZoneSpliceByteVec": {
       "sourceFile": "TimeZoneSpliceByteVec.ral",
       "sourceCodeHash": "0a67566477679cdaadca2734fddffd555a05cd0cfed576e648220456b28cdfb5",
       "bytecodeDebugPatch": "",
-      "codeHashDebug": "1e8dd9368f3365aa3816ec091f895b15ee0766c27a3b3b39c06ffbc10d64060e",
+      "codeHashDebug": "01c447ca2123a08d47b961762ad5e4c3bde21c4b8a300baf737411f85c374b54",
       "warnings": []
     },
     "TimeZoneSpliceU256": {
       "sourceFile": "TimeZoneSpliceU256.ral",
       "sourceCodeHash": "6c9c5892678781c27dca165ad3c7b91af876a7e168145e17b4a1347535940062",
       "bytecodeDebugPatch": "",
-      "codeHashDebug": "7a0c7f8efec8b59c06cb14eaef4754fe210848b68bdff619e2ebe79df5df1b9e",
+      "codeHashDebug": "729581b64923a70ad7ed241b656e8dcae139c7021ac06d73dc7e18b6d085c1f8",
       "warnings": []
     },
     "Withdraw": {
