@@ -25,6 +25,9 @@ import {
   getContractEventsCurrentCount,
   TestContractParamsWithoutMaps,
   TestContractResultWithoutMaps,
+  SignExecuteContractMethodParams,
+  SignExecuteScriptTxResult,
+  signExecuteMethod,
   addStdIdToFields,
   encodeContractFields,
 } from "@alephium/web3";
@@ -64,17 +67,25 @@ export namespace NFTTypes {
       params: Omit<CallContractParams<{}>, "args">;
       result: CallContractResult<HexString>;
     };
-    getAttributes: {
-      params: Omit<CallContractParams<{}>, "args">;
-      result: CallContractResult<HexString>;
-    };
     getNFTIndex: {
       params: Omit<CallContractParams<{}>, "args">;
       result: CallContractResult<bigint>;
     };
+    getTime: {
+      params: Omit<CallContractParams<{}>, "args">;
+      result: CallContractResult<bigint>;
+    };
+    getAttributes: {
+      params: Omit<CallContractParams<{}>, "args">;
+      result: CallContractResult<HexString>;
+    };
     encode: {
       params: CallContractParams<{ input: HexString }>;
       result: CallContractResult<HexString>;
+    };
+    burn: {
+      params: Omit<CallContractParams<{}>, "args">;
+      result: CallContractResult<null>;
     };
   }
   export type CallMethodParams<T extends keyof CallMethodTable> =
@@ -89,6 +100,53 @@ export namespace NFTTypes {
       ? CallMethodTable[MaybeName]["result"]
       : undefined;
   };
+
+  export interface SignExecuteMethodTable {
+    getTokenUri: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    getCollectionIndex: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    getImage: {
+      params: SignExecuteContractMethodParams<{
+        hours: bigint;
+        minutes: bigint;
+        seconds: bigint;
+      }>;
+      result: SignExecuteScriptTxResult;
+    };
+    getName: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    getNFTIndex: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    getTime: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    getAttributes: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    encode: {
+      params: SignExecuteContractMethodParams<{ input: HexString }>;
+      result: SignExecuteScriptTxResult;
+    };
+    burn: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+  }
+  export type SignExecuteMethodParams<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["params"];
+  export type SignExecuteMethodResult<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["result"];
 }
 
 class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
@@ -127,7 +185,7 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "getTokenUri", params);
+      return testMethod(this, "getTokenUri", params, getContractByCodeHash);
     },
     getCollectionIndex: async (
       params: Omit<
@@ -135,7 +193,12 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<[HexString, bigint]>> => {
-      return testMethod(this, "getCollectionIndex", params);
+      return testMethod(
+        this,
+        "getCollectionIndex",
+        params,
+        getContractByCodeHash
+      );
     },
     getImage: async (
       params: TestContractParamsWithoutMaps<
@@ -143,7 +206,7 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         { hours: bigint; minutes: bigint; seconds: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "getImage", params);
+      return testMethod(this, "getImage", params, getContractByCodeHash);
     },
     getName: async (
       params: Omit<
@@ -151,23 +214,7 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "getName", params);
-    },
-    getOffset: async (
-      params: Omit<
-        TestContractParamsWithoutMaps<NFTTypes.Fields, never>,
-        "testArgs"
-      >
-    ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "getOffset", params);
-    },
-    getAttributes: async (
-      params: Omit<
-        TestContractParamsWithoutMaps<NFTTypes.Fields, never>,
-        "testArgs"
-      >
-    ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "getAttributes", params);
+      return testMethod(this, "getName", params, getContractByCodeHash);
     },
     getNFTIndex: async (
       params: Omit<
@@ -175,7 +222,31 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<bigint>> => {
-      return testMethod(this, "getNFTIndex", params);
+      return testMethod(this, "getNFTIndex", params, getContractByCodeHash);
+    },
+    getOffsetLabel: async (
+      params: Omit<
+        TestContractParamsWithoutMaps<NFTTypes.Fields, never>,
+        "testArgs"
+      >
+    ): Promise<TestContractResultWithoutMaps<HexString>> => {
+      return testMethod(this, "getOffsetLabel", params, getContractByCodeHash);
+    },
+    getTime: async (
+      params: Omit<
+        TestContractParamsWithoutMaps<NFTTypes.Fields, never>,
+        "testArgs"
+      >
+    ): Promise<TestContractResultWithoutMaps<bigint>> => {
+      return testMethod(this, "getTime", params, getContractByCodeHash);
+    },
+    getAttributes: async (
+      params: Omit<
+        TestContractParamsWithoutMaps<NFTTypes.Fields, never>,
+        "testArgs"
+      >
+    ): Promise<TestContractResultWithoutMaps<HexString>> => {
+      return testMethod(this, "getAttributes", params, getContractByCodeHash);
     },
     createTraits: async (
       params: Omit<
@@ -183,7 +254,7 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "createTraits", params);
+      return testMethod(this, "createTraits", params, getContractByCodeHash);
     },
     createTrait: async (
       params: TestContractParamsWithoutMaps<
@@ -191,7 +262,7 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         { type: HexString; value: HexString }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "createTrait", params);
+      return testMethod(this, "createTrait", params, getContractByCodeHash);
     },
     quote: async (
       params: TestContractParamsWithoutMaps<
@@ -199,7 +270,7 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         { value: HexString }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "quote", params);
+      return testMethod(this, "quote", params, getContractByCodeHash);
     },
     jsonPair: async (
       params: TestContractParamsWithoutMaps<
@@ -207,7 +278,7 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         { key: HexString; value: HexString }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "jsonPair", params);
+      return testMethod(this, "jsonPair", params, getContractByCodeHash);
     },
     json: async (
       params: TestContractParamsWithoutMaps<
@@ -215,7 +286,7 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         { inner: HexString }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "json", params);
+      return testMethod(this, "json", params, getContractByCodeHash);
     },
     encode: async (
       params: TestContractParamsWithoutMaps<
@@ -223,12 +294,12 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         { input: HexString }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "encode", params);
+      return testMethod(this, "encode", params, getContractByCodeHash);
     },
     internalEncode: async (
       params: TestContractParamsWithoutMaps<NFTTypes.Fields, { src: HexString }>
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "internalEncode", params);
+      return testMethod(this, "internalEncode", params, getContractByCodeHash);
     },
     getChunk: async (
       params: TestContractParamsWithoutMaps<
@@ -236,7 +307,7 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         { src: HexString; size: bigint; location: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "getChunk", params);
+      return testMethod(this, "getChunk", params, getContractByCodeHash);
     },
     addPadding: async (
       params: TestContractParamsWithoutMaps<
@@ -244,7 +315,7 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         { inputSize: bigint; result: HexString }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "addPadding", params);
+      return testMethod(this, "addPadding", params, getContractByCodeHash);
     },
     burn: async (
       params: Omit<
@@ -252,7 +323,7 @@ class Factory extends ContractFactory<NFTInstance, NFTTypes.Fields> {
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "burn", params);
+      return testMethod(this, "burn", params, getContractByCodeHash);
     },
   };
 }
@@ -262,7 +333,7 @@ export const NFT = new Factory(
   Contract.fromJson(
     NFTContractJson,
     "",
-    "3bafad2d589931274be3a4cc137cfdea6468907f0007064b1ddd0dd03693146d",
+    "bd338fb603147b55481d08c111bfc5aa110c8f9f45bd9eab387a62bb8de9c17c",
     []
   )
 );
@@ -316,17 +387,6 @@ export class NFTInstance extends ContractInstance {
         getContractByCodeHash
       );
     },
-    getAttributes: async (
-      params?: NFTTypes.CallMethodParams<"getAttributes">
-    ): Promise<NFTTypes.CallMethodResult<"getAttributes">> => {
-      return callMethod(
-        NFT,
-        this,
-        "getAttributes",
-        params === undefined ? {} : params,
-        getContractByCodeHash
-      );
-    },
     getNFTIndex: async (
       params?: NFTTypes.CallMethodParams<"getNFTIndex">
     ): Promise<NFTTypes.CallMethodResult<"getNFTIndex">> => {
@@ -338,10 +398,93 @@ export class NFTInstance extends ContractInstance {
         getContractByCodeHash
       );
     },
+    getTime: async (
+      params?: NFTTypes.CallMethodParams<"getTime">
+    ): Promise<NFTTypes.CallMethodResult<"getTime">> => {
+      return callMethod(
+        NFT,
+        this,
+        "getTime",
+        params === undefined ? {} : params,
+        getContractByCodeHash
+      );
+    },
+    getAttributes: async (
+      params?: NFTTypes.CallMethodParams<"getAttributes">
+    ): Promise<NFTTypes.CallMethodResult<"getAttributes">> => {
+      return callMethod(
+        NFT,
+        this,
+        "getAttributes",
+        params === undefined ? {} : params,
+        getContractByCodeHash
+      );
+    },
     encode: async (
       params: NFTTypes.CallMethodParams<"encode">
     ): Promise<NFTTypes.CallMethodResult<"encode">> => {
       return callMethod(NFT, this, "encode", params, getContractByCodeHash);
+    },
+    burn: async (
+      params?: NFTTypes.CallMethodParams<"burn">
+    ): Promise<NFTTypes.CallMethodResult<"burn">> => {
+      return callMethod(
+        NFT,
+        this,
+        "burn",
+        params === undefined ? {} : params,
+        getContractByCodeHash
+      );
+    },
+  };
+
+  view = this.methods;
+
+  transact = {
+    getTokenUri: async (
+      params: NFTTypes.SignExecuteMethodParams<"getTokenUri">
+    ): Promise<NFTTypes.SignExecuteMethodResult<"getTokenUri">> => {
+      return signExecuteMethod(NFT, this, "getTokenUri", params);
+    },
+    getCollectionIndex: async (
+      params: NFTTypes.SignExecuteMethodParams<"getCollectionIndex">
+    ): Promise<NFTTypes.SignExecuteMethodResult<"getCollectionIndex">> => {
+      return signExecuteMethod(NFT, this, "getCollectionIndex", params);
+    },
+    getImage: async (
+      params: NFTTypes.SignExecuteMethodParams<"getImage">
+    ): Promise<NFTTypes.SignExecuteMethodResult<"getImage">> => {
+      return signExecuteMethod(NFT, this, "getImage", params);
+    },
+    getName: async (
+      params: NFTTypes.SignExecuteMethodParams<"getName">
+    ): Promise<NFTTypes.SignExecuteMethodResult<"getName">> => {
+      return signExecuteMethod(NFT, this, "getName", params);
+    },
+    getNFTIndex: async (
+      params: NFTTypes.SignExecuteMethodParams<"getNFTIndex">
+    ): Promise<NFTTypes.SignExecuteMethodResult<"getNFTIndex">> => {
+      return signExecuteMethod(NFT, this, "getNFTIndex", params);
+    },
+    getTime: async (
+      params: NFTTypes.SignExecuteMethodParams<"getTime">
+    ): Promise<NFTTypes.SignExecuteMethodResult<"getTime">> => {
+      return signExecuteMethod(NFT, this, "getTime", params);
+    },
+    getAttributes: async (
+      params: NFTTypes.SignExecuteMethodParams<"getAttributes">
+    ): Promise<NFTTypes.SignExecuteMethodResult<"getAttributes">> => {
+      return signExecuteMethod(NFT, this, "getAttributes", params);
+    },
+    encode: async (
+      params: NFTTypes.SignExecuteMethodParams<"encode">
+    ): Promise<NFTTypes.SignExecuteMethodResult<"encode">> => {
+      return signExecuteMethod(NFT, this, "encode", params);
+    },
+    burn: async (
+      params: NFTTypes.SignExecuteMethodParams<"burn">
+    ): Promise<NFTTypes.SignExecuteMethodResult<"burn">> => {
+      return signExecuteMethod(NFT, this, "burn", params);
     },
   };
 

@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@alphpro/web3-vue": "^0.0.4",
+    "@alphpro/web3-vue": "^0.45.0",
     "@repo/nft-contracts": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/web3": "workspace:*",
@@ -19,12 +19,12 @@
   },
   "devDependencies": {
     "@app/backend": "workspace:*",
-    "@vitejs/plugin-vue": "^5.0.4",
+    "@vitejs/plugin-vue": "^5.0.5",
     "autoprefixer": "^10.4.19",
     "buffer": "^6.0.3",
     "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3",
+    "tailwindcss": "^3.4.4",
     "typescript": "^5.4.5",
-    "vite": "^5.2.11"
+    "vite": "^5.2.13"
   }
 }

@@ -6,7 +6,7 @@ import config from "../alephium.config";
 import { validateNetwork } from "./utils";
 
 const NETWORK = validateNetwork(["devnet", "testnet"]);
-
+console.log({ NETWORK });
 const deployments = loadDeployments(NETWORK);
 
 const signer = new PrivateKeyWallet({

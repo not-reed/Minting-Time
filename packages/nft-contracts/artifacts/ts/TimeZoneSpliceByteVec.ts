@@ -25,6 +25,9 @@ import {
   getContractEventsCurrentCount,
   TestContractParamsWithoutMaps,
   TestContractResultWithoutMaps,
+  SignExecuteContractMethodParams,
+  SignExecuteScriptTxResult,
+  signExecuteMethod,
   addStdIdToFields,
   encodeContractFields,
 } from "@alephium/web3";
@@ -178,6 +181,18 @@ export namespace TimeZoneSpliceByteVecTypes {
       params: CallContractParams<{ item: bigint }>;
       result: CallContractResult<HexString>;
     };
+    setItem: {
+      params: CallContractParams<{ item: bigint; value: HexString }>;
+      result: CallContractResult<null>;
+    };
+    setCoordinator: {
+      params: CallContractParams<{ newCoordinator: Address }>;
+      result: CallContractResult<null>;
+    };
+    destroy: {
+      params: Omit<CallContractParams<{}>, "args">;
+      result: CallContractResult<null>;
+    };
   }
   export type CallMethodParams<T extends keyof CallMethodTable> =
     CallMethodTable[T]["params"];
@@ -191,6 +206,36 @@ export namespace TimeZoneSpliceByteVecTypes {
       ? CallMethodTable[MaybeName]["result"]
       : undefined;
   };
+
+  export interface SignExecuteMethodTable {
+    getStart: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    getItem: {
+      params: SignExecuteContractMethodParams<{ item: bigint }>;
+      result: SignExecuteScriptTxResult;
+    };
+    setItem: {
+      params: SignExecuteContractMethodParams<{
+        item: bigint;
+        value: HexString;
+      }>;
+      result: SignExecuteScriptTxResult;
+    };
+    setCoordinator: {
+      params: SignExecuteContractMethodParams<{ newCoordinator: Address }>;
+      result: SignExecuteScriptTxResult;
+    };
+    destroy: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+  }
+  export type SignExecuteMethodParams<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["params"];
+  export type SignExecuteMethodResult<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["result"];
 }
 
 class Factory extends ContractFactory<
@@ -222,7 +267,7 @@ class Factory extends ContractFactory<
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<bigint>> => {
-      return testMethod(this, "getStart", params);
+      return testMethod(this, "getStart", params, getContractByCodeHash);
     },
     getItem: async (
       params: TestContractParamsWithoutMaps<
@@ -230,7 +275,7 @@ class Factory extends ContractFactory<
         { item: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "getItem", params);
+      return testMethod(this, "getItem", params, getContractByCodeHash);
     },
     setItem: async (
       params: TestContractParamsWithoutMaps<
@@ -238,7 +283,7 @@ class Factory extends ContractFactory<
         { item: bigint; value: HexString }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "setItem", params);
+      return testMethod(this, "setItem", params, getContractByCodeHash);
     },
     setCoordinator: async (
       params: TestContractParamsWithoutMaps<
@@ -246,7 +291,7 @@ class Factory extends ContractFactory<
         { newCoordinator: Address }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "setCoordinator", params);
+      return testMethod(this, "setCoordinator", params, getContractByCodeHash);
     },
     destroy: async (
       params: Omit<
@@ -254,7 +299,7 @@ class Factory extends ContractFactory<
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "destroy", params);
+      return testMethod(this, "destroy", params, getContractByCodeHash);
     },
   };
 }
@@ -264,7 +309,7 @@ export const TimeZoneSpliceByteVec = new Factory(
   Contract.fromJson(
     TimeZoneSpliceByteVecContractJson,
     "",
-    "01c447ca2123a08d47b961762ad5e4c3bde21c4b8a300baf737411f85c374b54",
+    "1e8dd9368f3365aa3816ec091f895b15ee0766c27a3b3b39c06ffbc10d64060e",
     []
   )
 );
@@ -301,6 +346,86 @@ export class TimeZoneSpliceByteVecInstance extends ContractInstance {
         params,
         getContractByCodeHash
       );
+    },
+    setItem: async (
+      params: TimeZoneSpliceByteVecTypes.CallMethodParams<"setItem">
+    ): Promise<TimeZoneSpliceByteVecTypes.CallMethodResult<"setItem">> => {
+      return callMethod(
+        TimeZoneSpliceByteVec,
+        this,
+        "setItem",
+        params,
+        getContractByCodeHash
+      );
+    },
+    setCoordinator: async (
+      params: TimeZoneSpliceByteVecTypes.CallMethodParams<"setCoordinator">
+    ): Promise<
+      TimeZoneSpliceByteVecTypes.CallMethodResult<"setCoordinator">
+    > => {
+      return callMethod(
+        TimeZoneSpliceByteVec,
+        this,
+        "setCoordinator",
+        params,
+        getContractByCodeHash
+      );
+    },
+    destroy: async (
+      params?: TimeZoneSpliceByteVecTypes.CallMethodParams<"destroy">
+    ): Promise<TimeZoneSpliceByteVecTypes.CallMethodResult<"destroy">> => {
+      return callMethod(
+        TimeZoneSpliceByteVec,
+        this,
+        "destroy",
+        params === undefined ? {} : params,
+        getContractByCodeHash
+      );
+    },
+  };
+
+  view = this.methods;
+
+  transact = {
+    getStart: async (
+      params: TimeZoneSpliceByteVecTypes.SignExecuteMethodParams<"getStart">
+    ): Promise<
+      TimeZoneSpliceByteVecTypes.SignExecuteMethodResult<"getStart">
+    > => {
+      return signExecuteMethod(TimeZoneSpliceByteVec, this, "getStart", params);
+    },
+    getItem: async (
+      params: TimeZoneSpliceByteVecTypes.SignExecuteMethodParams<"getItem">
+    ): Promise<
+      TimeZoneSpliceByteVecTypes.SignExecuteMethodResult<"getItem">
+    > => {
+      return signExecuteMethod(TimeZoneSpliceByteVec, this, "getItem", params);
+    },
+    setItem: async (
+      params: TimeZoneSpliceByteVecTypes.SignExecuteMethodParams<"setItem">
+    ): Promise<
+      TimeZoneSpliceByteVecTypes.SignExecuteMethodResult<"setItem">
+    > => {
+      return signExecuteMethod(TimeZoneSpliceByteVec, this, "setItem", params);
+    },
+    setCoordinator: async (
+      params: TimeZoneSpliceByteVecTypes.SignExecuteMethodParams<"setCoordinator">
+    ): Promise<
+      TimeZoneSpliceByteVecTypes.SignExecuteMethodResult<"setCoordinator">
+    > => {
+      return signExecuteMethod(
+        TimeZoneSpliceByteVec,
+        this,
+        "setCoordinator",
+        params
+      );
+    },
+    destroy: async (
+      params: TimeZoneSpliceByteVecTypes.SignExecuteMethodParams<"destroy">
+    ): Promise<
+      TimeZoneSpliceByteVecTypes.SignExecuteMethodResult<"destroy">
+    > => {
+      return signExecuteMethod(TimeZoneSpliceByteVec, this, "destroy", params);
     },
   };
 

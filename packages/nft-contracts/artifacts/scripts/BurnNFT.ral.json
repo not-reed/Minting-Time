@@ -1,5 +1,5 @@
 {
-  "version": "v2.12.0",
+  "version": "v3.1.1",
   "name": "BurnNFT",
   "bytecodeTemplate": "01010300000008b4{0}0da30c0c{0}0110",
   "fieldsSig": {

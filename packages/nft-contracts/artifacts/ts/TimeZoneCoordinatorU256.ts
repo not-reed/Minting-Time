@@ -25,6 +25,9 @@ import {
   getContractEventsCurrentCount,
   TestContractParamsWithoutMaps,
   TestContractResultWithoutMaps,
+  SignExecuteContractMethodParams,
+  SignExecuteScriptTxResult,
+  signExecuteMethod,
   addStdIdToFields,
   encodeContractFields,
 } from "@alephium/web3";
@@ -47,9 +50,17 @@ export namespace TimeZoneCoordinatorU256Types {
   export type State = ContractState<Fields>;
 
   export interface CallMethodTable {
+    setController: {
+      params: CallContractParams<{ controller_: Address }>;
+      result: CallContractResult<null>;
+    };
     getItem: {
       params: CallContractParams<{ item: bigint }>;
       result: CallContractResult<bigint>;
+    };
+    destroy: {
+      params: Omit<CallContractParams<{}>, "args">;
+      result: CallContractResult<null>;
     };
   }
   export type CallMethodParams<T extends keyof CallMethodTable> =
@@ -64,6 +75,25 @@ export namespace TimeZoneCoordinatorU256Types {
       ? CallMethodTable[MaybeName]["result"]
       : undefined;
   };
+
+  export interface SignExecuteMethodTable {
+    setController: {
+      params: SignExecuteContractMethodParams<{ controller_: Address }>;
+      result: SignExecuteScriptTxResult;
+    };
+    getItem: {
+      params: SignExecuteContractMethodParams<{ item: bigint }>;
+      result: SignExecuteScriptTxResult;
+    };
+    destroy: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+  }
+  export type SignExecuteMethodParams<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["params"];
+  export type SignExecuteMethodResult<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["result"];
 }
 
 class Factory extends ContractFactory<
@@ -95,7 +125,7 @@ class Factory extends ContractFactory<
         { controller_: Address }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "setController", params);
+      return testMethod(this, "setController", params, getContractByCodeHash);
     },
     getItem: async (
       params: TestContractParamsWithoutMaps<
@@ -103,7 +133,7 @@ class Factory extends ContractFactory<
         { item: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<bigint>> => {
-      return testMethod(this, "getItem", params);
+      return testMethod(this, "getItem", params, getContractByCodeHash);
     },
     internalGetItem: async (
       params: TestContractParamsWithoutMaps<
@@ -111,7 +141,7 @@ class Factory extends ContractFactory<
         { item: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<bigint>> => {
-      return testMethod(this, "internalGetItem", params);
+      return testMethod(this, "internalGetItem", params, getContractByCodeHash);
     },
     internalSetItem: async (
       params: TestContractParamsWithoutMaps<
@@ -119,7 +149,7 @@ class Factory extends ContractFactory<
         { item: bigint; value: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "internalSetItem", params);
+      return testMethod(this, "internalSetItem", params, getContractByCodeHash);
     },
     destroy: async (
       params: Omit<
@@ -130,7 +160,7 @@ class Factory extends ContractFactory<
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "destroy", params);
+      return testMethod(this, "destroy", params, getContractByCodeHash);
     },
   };
 }
@@ -140,7 +170,7 @@ export const TimeZoneCoordinatorU256 = new Factory(
   Contract.fromJson(
     TimeZoneCoordinatorU256ContractJson,
     "",
-    "8239b268a449f089185df76a01b4ae3ed6ddcf1434f7533224772eead92a8022",
+    "24f95ed82b673959550ee16c117003b6c969aeddb9964e98fd8166eb4ef21880",
     []
   )
 );
@@ -156,6 +186,19 @@ export class TimeZoneCoordinatorU256Instance extends ContractInstance {
   }
 
   methods = {
+    setController: async (
+      params: TimeZoneCoordinatorU256Types.CallMethodParams<"setController">
+    ): Promise<
+      TimeZoneCoordinatorU256Types.CallMethodResult<"setController">
+    > => {
+      return callMethod(
+        TimeZoneCoordinatorU256,
+        this,
+        "setController",
+        params,
+        getContractByCodeHash
+      );
+    },
     getItem: async (
       params: TimeZoneCoordinatorU256Types.CallMethodParams<"getItem">
     ): Promise<TimeZoneCoordinatorU256Types.CallMethodResult<"getItem">> => {
@@ -165,6 +208,58 @@ export class TimeZoneCoordinatorU256Instance extends ContractInstance {
         "getItem",
         params,
         getContractByCodeHash
+      );
+    },
+    destroy: async (
+      params?: TimeZoneCoordinatorU256Types.CallMethodParams<"destroy">
+    ): Promise<TimeZoneCoordinatorU256Types.CallMethodResult<"destroy">> => {
+      return callMethod(
+        TimeZoneCoordinatorU256,
+        this,
+        "destroy",
+        params === undefined ? {} : params,
+        getContractByCodeHash
+      );
+    },
+  };
+
+  view = this.methods;
+
+  transact = {
+    setController: async (
+      params: TimeZoneCoordinatorU256Types.SignExecuteMethodParams<"setController">
+    ): Promise<
+      TimeZoneCoordinatorU256Types.SignExecuteMethodResult<"setController">
+    > => {
+      return signExecuteMethod(
+        TimeZoneCoordinatorU256,
+        this,
+        "setController",
+        params
+      );
+    },
+    getItem: async (
+      params: TimeZoneCoordinatorU256Types.SignExecuteMethodParams<"getItem">
+    ): Promise<
+      TimeZoneCoordinatorU256Types.SignExecuteMethodResult<"getItem">
+    > => {
+      return signExecuteMethod(
+        TimeZoneCoordinatorU256,
+        this,
+        "getItem",
+        params
+      );
+    },
+    destroy: async (
+      params: TimeZoneCoordinatorU256Types.SignExecuteMethodParams<"destroy">
+    ): Promise<
+      TimeZoneCoordinatorU256Types.SignExecuteMethodResult<"destroy">
+    > => {
+      return signExecuteMethod(
+        TimeZoneCoordinatorU256,
+        this,
+        "destroy",
+        params
       );
     },
   };

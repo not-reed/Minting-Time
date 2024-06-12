@@ -25,6 +25,9 @@ import {
   getContractEventsCurrentCount,
   TestContractParamsWithoutMaps,
   TestContractResultWithoutMaps,
+  SignExecuteContractMethodParams,
+  SignExecuteScriptTxResult,
+  signExecuteMethod,
   addStdIdToFields,
   encodeContractFields,
 } from "@alephium/web3";
@@ -62,13 +65,45 @@ export namespace NFTCollectionTypes {
       params: CallContractParams<{ index: bigint }>;
       result: CallContractResult<HexString>;
     };
+    validateNFT: {
+      params: CallContractParams<{ nftId: HexString; nftIndex: bigint }>;
+      result: CallContractResult<null>;
+    };
+    setPrice: {
+      params: CallContractParams<{ price_: bigint }>;
+      result: CallContractResult<null>;
+    };
     getPrice: {
       params: Omit<CallContractParams<{}>, "args">;
       result: CallContractResult<bigint>;
     };
+    mint: {
+      params: Omit<CallContractParams<{}>, "args">;
+      result: CallContractResult<null>;
+    };
     royaltyAmount: {
       params: CallContractParams<{ tokenId: HexString; salePrice: bigint }>;
       result: CallContractResult<bigint>;
+    };
+    payRoyalty: {
+      params: CallContractParams<{ payer_: Address; amount_: bigint }>;
+      result: CallContractResult<null>;
+    };
+    withdrawRoyalty: {
+      params: CallContractParams<{ to_: Address; amount_: bigint }>;
+      result: CallContractResult<null>;
+    };
+    withdrawAlph: {
+      params: CallContractParams<{ to_: Address; amount_: bigint }>;
+      result: CallContractResult<null>;
+    };
+    destroyInfrastructure: {
+      params: Omit<CallContractParams<{}>, "args">;
+      result: CallContractResult<null>;
+    };
+    burnToken: {
+      params: CallContractParams<{ nftIndex: bigint }>;
+      result: CallContractResult<null>;
     };
   }
   export type CallMethodParams<T extends keyof CallMethodTable> =
@@ -83,6 +118,80 @@ export namespace NFTCollectionTypes {
       ? CallMethodTable[MaybeName]["result"]
       : undefined;
   };
+
+  export interface SignExecuteMethodTable {
+    getCollectionUri: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    totalSupply: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    nftByIndex: {
+      params: SignExecuteContractMethodParams<{ index: bigint }>;
+      result: SignExecuteScriptTxResult;
+    };
+    validateNFT: {
+      params: SignExecuteContractMethodParams<{
+        nftId: HexString;
+        nftIndex: bigint;
+      }>;
+      result: SignExecuteScriptTxResult;
+    };
+    setPrice: {
+      params: SignExecuteContractMethodParams<{ price_: bigint }>;
+      result: SignExecuteScriptTxResult;
+    };
+    getPrice: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    mint: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    royaltyAmount: {
+      params: SignExecuteContractMethodParams<{
+        tokenId: HexString;
+        salePrice: bigint;
+      }>;
+      result: SignExecuteScriptTxResult;
+    };
+    payRoyalty: {
+      params: SignExecuteContractMethodParams<{
+        payer_: Address;
+        amount_: bigint;
+      }>;
+      result: SignExecuteScriptTxResult;
+    };
+    withdrawRoyalty: {
+      params: SignExecuteContractMethodParams<{
+        to_: Address;
+        amount_: bigint;
+      }>;
+      result: SignExecuteScriptTxResult;
+    };
+    withdrawAlph: {
+      params: SignExecuteContractMethodParams<{
+        to_: Address;
+        amount_: bigint;
+      }>;
+      result: SignExecuteScriptTxResult;
+    };
+    destroyInfrastructure: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    burnToken: {
+      params: SignExecuteContractMethodParams<{ nftIndex: bigint }>;
+      result: SignExecuteScriptTxResult;
+    };
+  }
+  export type SignExecuteMethodParams<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["params"];
+  export type SignExecuteMethodResult<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["result"];
 }
 
 class Factory extends ContractFactory<
@@ -123,7 +232,12 @@ class Factory extends ContractFactory<
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "getCollectionUri", params);
+      return testMethod(
+        this,
+        "getCollectionUri",
+        params,
+        getContractByCodeHash
+      );
     },
     totalSupply: async (
       params: Omit<
@@ -131,7 +245,7 @@ class Factory extends ContractFactory<
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<bigint>> => {
-      return testMethod(this, "totalSupply", params);
+      return testMethod(this, "totalSupply", params, getContractByCodeHash);
     },
     nftByIndex: async (
       params: TestContractParamsWithoutMaps<
@@ -139,7 +253,7 @@ class Factory extends ContractFactory<
         { index: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "nftByIndex", params);
+      return testMethod(this, "nftByIndex", params, getContractByCodeHash);
     },
     validateNFT: async (
       params: TestContractParamsWithoutMaps<
@@ -147,7 +261,7 @@ class Factory extends ContractFactory<
         { nftId: HexString; nftIndex: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "validateNFT", params);
+      return testMethod(this, "validateNFT", params, getContractByCodeHash);
     },
     setPrice: async (
       params: TestContractParamsWithoutMaps<
@@ -155,7 +269,7 @@ class Factory extends ContractFactory<
         { price_: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "setPrice", params);
+      return testMethod(this, "setPrice", params, getContractByCodeHash);
     },
     getPrice: async (
       params: Omit<
@@ -163,7 +277,7 @@ class Factory extends ContractFactory<
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<bigint>> => {
-      return testMethod(this, "getPrice", params);
+      return testMethod(this, "getPrice", params, getContractByCodeHash);
     },
     mint: async (
       params: Omit<
@@ -171,7 +285,7 @@ class Factory extends ContractFactory<
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "mint", params);
+      return testMethod(this, "mint", params, getContractByCodeHash);
     },
     royaltyAmount: async (
       params: TestContractParamsWithoutMaps<
@@ -179,7 +293,7 @@ class Factory extends ContractFactory<
         { tokenId: HexString; salePrice: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<bigint>> => {
-      return testMethod(this, "royaltyAmount", params);
+      return testMethod(this, "royaltyAmount", params, getContractByCodeHash);
     },
     payRoyalty: async (
       params: TestContractParamsWithoutMaps<
@@ -187,7 +301,7 @@ class Factory extends ContractFactory<
         { payer_: Address; amount_: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "payRoyalty", params);
+      return testMethod(this, "payRoyalty", params, getContractByCodeHash);
     },
     withdrawRoyalty: async (
       params: TestContractParamsWithoutMaps<
@@ -195,7 +309,7 @@ class Factory extends ContractFactory<
         { to_: Address; amount_: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "withdrawRoyalty", params);
+      return testMethod(this, "withdrawRoyalty", params, getContractByCodeHash);
     },
     withdrawAlph: async (
       params: TestContractParamsWithoutMaps<
@@ -203,7 +317,7 @@ class Factory extends ContractFactory<
         { to_: Address; amount_: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "withdrawAlph", params);
+      return testMethod(this, "withdrawAlph", params, getContractByCodeHash);
     },
     destroyInfrastructure: async (
       params: Omit<
@@ -211,7 +325,12 @@ class Factory extends ContractFactory<
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "destroyInfrastructure", params);
+      return testMethod(
+        this,
+        "destroyInfrastructure",
+        params,
+        getContractByCodeHash
+      );
     },
     burnToken: async (
       params: TestContractParamsWithoutMaps<
@@ -219,7 +338,7 @@ class Factory extends ContractFactory<
         { nftIndex: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "burnToken", params);
+      return testMethod(this, "burnToken", params, getContractByCodeHash);
     },
   };
 }
@@ -229,7 +348,7 @@ export const NFTCollection = new Factory(
   Contract.fromJson(
     NFTCollectionContractJson,
     "",
-    "3582852e385b83785b15bfd555d52e7da9a35ba718e6e70ccf19c7147cd3fd4f",
+    "c1bc7ea758b55cb1a8317e101e08482a5720f3d88cf0cf87a29861f30dc8564e",
     []
   )
 );
@@ -295,6 +414,28 @@ export class NFTCollectionInstance extends ContractInstance {
         getContractByCodeHash
       );
     },
+    validateNFT: async (
+      params: NFTCollectionTypes.CallMethodParams<"validateNFT">
+    ): Promise<NFTCollectionTypes.CallMethodResult<"validateNFT">> => {
+      return callMethod(
+        NFTCollection,
+        this,
+        "validateNFT",
+        params,
+        getContractByCodeHash
+      );
+    },
+    setPrice: async (
+      params: NFTCollectionTypes.CallMethodParams<"setPrice">
+    ): Promise<NFTCollectionTypes.CallMethodResult<"setPrice">> => {
+      return callMethod(
+        NFTCollection,
+        this,
+        "setPrice",
+        params,
+        getContractByCodeHash
+      );
+    },
     getPrice: async (
       params?: NFTCollectionTypes.CallMethodParams<"getPrice">
     ): Promise<NFTCollectionTypes.CallMethodResult<"getPrice">> => {
@@ -302,6 +443,17 @@ export class NFTCollectionInstance extends ContractInstance {
         NFTCollection,
         this,
         "getPrice",
+        params === undefined ? {} : params,
+        getContractByCodeHash
+      );
+    },
+    mint: async (
+      params?: NFTCollectionTypes.CallMethodParams<"mint">
+    ): Promise<NFTCollectionTypes.CallMethodResult<"mint">> => {
+      return callMethod(
+        NFTCollection,
+        this,
+        "mint",
         params === undefined ? {} : params,
         getContractByCodeHash
       );
@@ -316,6 +468,144 @@ export class NFTCollectionInstance extends ContractInstance {
         params,
         getContractByCodeHash
       );
+    },
+    payRoyalty: async (
+      params: NFTCollectionTypes.CallMethodParams<"payRoyalty">
+    ): Promise<NFTCollectionTypes.CallMethodResult<"payRoyalty">> => {
+      return callMethod(
+        NFTCollection,
+        this,
+        "payRoyalty",
+        params,
+        getContractByCodeHash
+      );
+    },
+    withdrawRoyalty: async (
+      params: NFTCollectionTypes.CallMethodParams<"withdrawRoyalty">
+    ): Promise<NFTCollectionTypes.CallMethodResult<"withdrawRoyalty">> => {
+      return callMethod(
+        NFTCollection,
+        this,
+        "withdrawRoyalty",
+        params,
+        getContractByCodeHash
+      );
+    },
+    withdrawAlph: async (
+      params: NFTCollectionTypes.CallMethodParams<"withdrawAlph">
+    ): Promise<NFTCollectionTypes.CallMethodResult<"withdrawAlph">> => {
+      return callMethod(
+        NFTCollection,
+        this,
+        "withdrawAlph",
+        params,
+        getContractByCodeHash
+      );
+    },
+    destroyInfrastructure: async (
+      params?: NFTCollectionTypes.CallMethodParams<"destroyInfrastructure">
+    ): Promise<
+      NFTCollectionTypes.CallMethodResult<"destroyInfrastructure">
+    > => {
+      return callMethod(
+        NFTCollection,
+        this,
+        "destroyInfrastructure",
+        params === undefined ? {} : params,
+        getContractByCodeHash
+      );
+    },
+    burnToken: async (
+      params: NFTCollectionTypes.CallMethodParams<"burnToken">
+    ): Promise<NFTCollectionTypes.CallMethodResult<"burnToken">> => {
+      return callMethod(
+        NFTCollection,
+        this,
+        "burnToken",
+        params,
+        getContractByCodeHash
+      );
+    },
+  };
+
+  view = this.methods;
+
+  transact = {
+    getCollectionUri: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"getCollectionUri">
+    ): Promise<
+      NFTCollectionTypes.SignExecuteMethodResult<"getCollectionUri">
+    > => {
+      return signExecuteMethod(NFTCollection, this, "getCollectionUri", params);
+    },
+    totalSupply: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"totalSupply">
+    ): Promise<NFTCollectionTypes.SignExecuteMethodResult<"totalSupply">> => {
+      return signExecuteMethod(NFTCollection, this, "totalSupply", params);
+    },
+    nftByIndex: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"nftByIndex">
+    ): Promise<NFTCollectionTypes.SignExecuteMethodResult<"nftByIndex">> => {
+      return signExecuteMethod(NFTCollection, this, "nftByIndex", params);
+    },
+    validateNFT: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"validateNFT">
+    ): Promise<NFTCollectionTypes.SignExecuteMethodResult<"validateNFT">> => {
+      return signExecuteMethod(NFTCollection, this, "validateNFT", params);
+    },
+    setPrice: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"setPrice">
+    ): Promise<NFTCollectionTypes.SignExecuteMethodResult<"setPrice">> => {
+      return signExecuteMethod(NFTCollection, this, "setPrice", params);
+    },
+    getPrice: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"getPrice">
+    ): Promise<NFTCollectionTypes.SignExecuteMethodResult<"getPrice">> => {
+      return signExecuteMethod(NFTCollection, this, "getPrice", params);
+    },
+    mint: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"mint">
+    ): Promise<NFTCollectionTypes.SignExecuteMethodResult<"mint">> => {
+      return signExecuteMethod(NFTCollection, this, "mint", params);
+    },
+    royaltyAmount: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"royaltyAmount">
+    ): Promise<NFTCollectionTypes.SignExecuteMethodResult<"royaltyAmount">> => {
+      return signExecuteMethod(NFTCollection, this, "royaltyAmount", params);
+    },
+    payRoyalty: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"payRoyalty">
+    ): Promise<NFTCollectionTypes.SignExecuteMethodResult<"payRoyalty">> => {
+      return signExecuteMethod(NFTCollection, this, "payRoyalty", params);
+    },
+    withdrawRoyalty: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"withdrawRoyalty">
+    ): Promise<
+      NFTCollectionTypes.SignExecuteMethodResult<"withdrawRoyalty">
+    > => {
+      return signExecuteMethod(NFTCollection, this, "withdrawRoyalty", params);
+    },
+    withdrawAlph: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"withdrawAlph">
+    ): Promise<NFTCollectionTypes.SignExecuteMethodResult<"withdrawAlph">> => {
+      return signExecuteMethod(NFTCollection, this, "withdrawAlph", params);
+    },
+    destroyInfrastructure: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"destroyInfrastructure">
+    ): Promise<
+      NFTCollectionTypes.SignExecuteMethodResult<"destroyInfrastructure">
+    > => {
+      return signExecuteMethod(
+        NFTCollection,
+        this,
+        "destroyInfrastructure",
+        params
+      );
+    },
+    burnToken: async (
+      params: NFTCollectionTypes.SignExecuteMethodParams<"burnToken">
+    ): Promise<NFTCollectionTypes.SignExecuteMethodResult<"burnToken">> => {
+      return signExecuteMethod(NFTCollection, this, "burnToken", params);
     },
   };
 

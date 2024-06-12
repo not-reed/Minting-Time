@@ -883,26 +883,38 @@ const deployFaucet: DeployFunction<Settings> = async (
 	);
 
 	logDeploy("TimeZoneCoordinatorByteVec:zones_coordinator", zoneCoordinator);
-	await deployer.runScript(SetCoordinatorByteVec, {
-		initialFields: {
-			splice: zoneSpliceOne.contractInstance.contractId,
-			address: zoneCoordinator.contractInstance.address,
+	await deployer.runScript(
+		SetCoordinatorByteVec,
+		{
+			initialFields: {
+				splice: zoneSpliceOne.contractInstance.contractId,
+				address: zoneCoordinator.contractInstance.address,
+			},
 		},
-	});
+		"SetCoordinatorByteVec_zoneSpliceOne",
+	);
 
-	await deployer.runScript(SetCoordinatorByteVec, {
-		initialFields: {
-			splice: zoneSpliceTwo.contractInstance.contractId,
-			address: zoneCoordinator.contractInstance.address,
+	await deployer.runScript(
+		SetCoordinatorByteVec,
+		{
+			initialFields: {
+				splice: zoneSpliceTwo.contractInstance.contractId,
+				address: zoneCoordinator.contractInstance.address,
+			},
 		},
-	});
+		"SetCoordinatorByteVec_zoneSpliceTwo",
+	);
 
-	await deployer.runScript(SetCoordinatorByteVec, {
-		initialFields: {
-			splice: zoneSpliceThree.contractInstance.contractId,
-			address: zoneCoordinator.contractInstance.address,
+	await deployer.runScript(
+		SetCoordinatorByteVec,
+		{
+			initialFields: {
+				splice: zoneSpliceThree.contractInstance.contractId,
+				address: zoneCoordinator.contractInstance.address,
+			},
 		},
-	});
+		"SetCoordinatorByteVec_zoneSpliceThree",
+	);
 
 	/** Abbreviations */
 	const abbrSpliceOne = await deployer.deployContract(
@@ -961,26 +973,38 @@ const deployFaucet: DeployFunction<Settings> = async (
 	);
 
 	logDeploy("TimeZoneCoordinatorByteVec:abbr_coordinator", abbrCoordinator);
-	await deployer.runScript(SetCoordinatorByteVec, {
-		initialFields: {
-			splice: abbrSpliceOne.contractInstance.contractId,
-			address: abbrCoordinator.contractInstance.address,
+	await deployer.runScript(
+		SetCoordinatorByteVec,
+		{
+			initialFields: {
+				splice: abbrSpliceOne.contractInstance.contractId,
+				address: abbrCoordinator.contractInstance.address,
+			},
 		},
-	});
+		"SetCoordinatorByteVec_abbrSpliceOne",
+	);
 
-	await deployer.runScript(SetCoordinatorByteVec, {
-		initialFields: {
-			splice: abbrSpliceTwo.contractInstance.contractId,
-			address: abbrCoordinator.contractInstance.address,
+	await deployer.runScript(
+		SetCoordinatorByteVec,
+		{
+			initialFields: {
+				splice: abbrSpliceTwo.contractInstance.contractId,
+				address: abbrCoordinator.contractInstance.address,
+			},
 		},
-	});
+		"SetCoordinatorByteVec_abbrSpliceTwo",
+	);
 
-	await deployer.runScript(SetCoordinatorByteVec, {
-		initialFields: {
-			splice: abbrSpliceThree.contractInstance.contractId,
-			address: abbrCoordinator.contractInstance.address,
+	await deployer.runScript(
+		SetCoordinatorByteVec,
+		{
+			initialFields: {
+				splice: abbrSpliceThree.contractInstance.contractId,
+				address: abbrCoordinator.contractInstance.address,
+			},
 		},
-	});
+		"SetCoordinatorByteVec_abbrSpliceThree",
+	);
 
 	/** Offsets */
 	const offsetSpliceOne = await deployer.deployContract(
@@ -1067,39 +1091,59 @@ const deployFaucet: DeployFunction<Settings> = async (
 	);
 
 	logDeploy("TimeZoneCoordinatorU256:offset_coordinator", offsetCoordinator);
-	await deployer.runScript(SetCoordinatorU256, {
-		initialFields: {
-			splice: offsetSpliceOne.contractInstance.contractId,
-			address: offsetCoordinator.contractInstance.address,
+	await deployer.runScript(
+		SetCoordinatorU256,
+		{
+			initialFields: {
+				splice: offsetSpliceOne.contractInstance.contractId,
+				address: offsetCoordinator.contractInstance.address,
+			},
 		},
-	});
+		"SetCoordinatorU256_offsetSpliceOne",
+	);
 
-	await deployer.runScript(SetCoordinatorU256, {
-		initialFields: {
-			splice: offsetSpliceTwo.contractInstance.contractId,
-			address: offsetCoordinator.contractInstance.address,
+	await deployer.runScript(
+		SetCoordinatorU256,
+		{
+			initialFields: {
+				splice: offsetSpliceTwo.contractInstance.contractId,
+				address: offsetCoordinator.contractInstance.address,
+			},
 		},
-	});
+		"SetCoordinatorU256_offsetSpliceTwo",
+	);
 
-	await deployer.runScript(SetCoordinatorU256, {
-		initialFields: {
-			splice: offsetSpliceThree.contractInstance.contractId,
-			address: offsetCoordinator.contractInstance.address,
+	await deployer.runScript(
+		SetCoordinatorU256,
+		{
+			initialFields: {
+				splice: offsetSpliceThree.contractInstance.contractId,
+				address: offsetCoordinator.contractInstance.address,
+			},
 		},
-	});
+		"SetCoordinatorU256_offsetSpliceThree",
+	);
 
-	await deployer.runScript(SetCoordinatorU256, {
-		initialFields: {
-			splice: offsetSpliceFour.contractInstance.contractId,
-			address: offsetCoordinator.contractInstance.address,
+	await deployer.runScript(
+		SetCoordinatorU256,
+		{
+			initialFields: {
+				splice: offsetSpliceFour.contractInstance.contractId,
+				address: offsetCoordinator.contractInstance.address,
+			},
 		},
-	});
-	await deployer.runScript(SetCoordinatorU256, {
-		initialFields: {
-			splice: offsetSpliceFive.contractInstance.contractId,
-			address: offsetCoordinator.contractInstance.address,
+		"SetCoordinatorU256_offsetSpliceFour",
+	);
+	await deployer.runScript(
+		SetCoordinatorU256,
+		{
+			initialFields: {
+				splice: offsetSpliceFive.contractInstance.contractId,
+				address: offsetCoordinator.contractInstance.address,
+			},
 		},
-	});
+		"SetCoordinatorU256_offsetSpliceFive",
+	);
 
 	const tz = await deployer.deployContract(TimeZoneController, {
 		initialFields: {
@@ -1113,24 +1157,36 @@ const deployFaucet: DeployFunction<Settings> = async (
 	});
 
 	logDeploy("TimeZoneController", tz);
-	await deployer.runScript(SetControllerByteVec, {
-		initialFields: {
-			splice: abbrCoordinator.contractInstance.contractId,
-			address: tz.contractInstance.address,
+	await deployer.runScript(
+		SetControllerByteVec,
+		{
+			initialFields: {
+				splice: abbrCoordinator.contractInstance.contractId,
+				address: tz.contractInstance.address,
+			},
 		},
-	});
-	await deployer.runScript(SetControllerByteVec, {
-		initialFields: {
-			splice: zoneCoordinator.contractInstance.contractId,
-			address: tz.contractInstance.address,
+		"SetControllerByteVec_abbrCoordinator",
+	);
+	await deployer.runScript(
+		SetControllerByteVec,
+		{
+			initialFields: {
+				splice: zoneCoordinator.contractInstance.contractId,
+				address: tz.contractInstance.address,
+			},
 		},
-	});
-	await deployer.runScript(SetControllerU256, {
-		initialFields: {
-			splice: offsetCoordinator.contractInstance.contractId,
-			address: tz.contractInstance.address,
+		"SetControllerByteVec_zoneCoordinator",
+	);
+	await deployer.runScript(
+		SetControllerU256,
+		{
+			initialFields: {
+				splice: offsetCoordinator.contractInstance.contractId,
+				address: tz.contractInstance.address,
+			},
 		},
-	});
+		"SetControllerU256_offsetCoordinator",
+	);
 
 	const nftTemplateResult = await deployer.deployContract(NFT, {
 		initialFields: {

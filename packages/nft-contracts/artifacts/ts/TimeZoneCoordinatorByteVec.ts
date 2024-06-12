@@ -25,6 +25,9 @@ import {
   getContractEventsCurrentCount,
   TestContractParamsWithoutMaps,
   TestContractResultWithoutMaps,
+  SignExecuteContractMethodParams,
+  SignExecuteScriptTxResult,
+  signExecuteMethod,
   addStdIdToFields,
   encodeContractFields,
 } from "@alephium/web3";
@@ -45,9 +48,17 @@ export namespace TimeZoneCoordinatorByteVecTypes {
   export type State = ContractState<Fields>;
 
   export interface CallMethodTable {
+    setController: {
+      params: CallContractParams<{ controller_: Address }>;
+      result: CallContractResult<null>;
+    };
     getItem: {
       params: CallContractParams<{ item: bigint }>;
       result: CallContractResult<HexString>;
+    };
+    destroy: {
+      params: Omit<CallContractParams<{}>, "args">;
+      result: CallContractResult<null>;
     };
   }
   export type CallMethodParams<T extends keyof CallMethodTable> =
@@ -62,6 +73,25 @@ export namespace TimeZoneCoordinatorByteVecTypes {
       ? CallMethodTable[MaybeName]["result"]
       : undefined;
   };
+
+  export interface SignExecuteMethodTable {
+    setController: {
+      params: SignExecuteContractMethodParams<{ controller_: Address }>;
+      result: SignExecuteScriptTxResult;
+    };
+    getItem: {
+      params: SignExecuteContractMethodParams<{ item: bigint }>;
+      result: SignExecuteScriptTxResult;
+    };
+    destroy: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+  }
+  export type SignExecuteMethodParams<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["params"];
+  export type SignExecuteMethodResult<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["result"];
 }
 
 class Factory extends ContractFactory<
@@ -93,7 +123,7 @@ class Factory extends ContractFactory<
         { controller_: Address }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "setController", params);
+      return testMethod(this, "setController", params, getContractByCodeHash);
     },
     getItem: async (
       params: TestContractParamsWithoutMaps<
@@ -101,7 +131,7 @@ class Factory extends ContractFactory<
         { item: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "getItem", params);
+      return testMethod(this, "getItem", params, getContractByCodeHash);
     },
     internalGetItem: async (
       params: TestContractParamsWithoutMaps<
@@ -109,7 +139,7 @@ class Factory extends ContractFactory<
         { item: bigint }
       >
     ): Promise<TestContractResultWithoutMaps<HexString>> => {
-      return testMethod(this, "internalGetItem", params);
+      return testMethod(this, "internalGetItem", params, getContractByCodeHash);
     },
     internalSetItem: async (
       params: TestContractParamsWithoutMaps<
@@ -117,7 +147,7 @@ class Factory extends ContractFactory<
         { item: bigint; value: HexString }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "internalSetItem", params);
+      return testMethod(this, "internalSetItem", params, getContractByCodeHash);
     },
     destroy: async (
       params: Omit<
@@ -128,7 +158,7 @@ class Factory extends ContractFactory<
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "destroy", params);
+      return testMethod(this, "destroy", params, getContractByCodeHash);
     },
   };
 }
@@ -138,7 +168,7 @@ export const TimeZoneCoordinatorByteVec = new Factory(
   Contract.fromJson(
     TimeZoneCoordinatorByteVecContractJson,
     "",
-    "2e02e5af70238b597d6abf3451cd4d7f5eeb4279f6d53966c1642dfb36ebedf4",
+    "f446a628c2291d8eba4955b96d7f49628fcf4d9ed3b4ca4aed91dd05e155d813",
     []
   )
 );
@@ -154,6 +184,19 @@ export class TimeZoneCoordinatorByteVecInstance extends ContractInstance {
   }
 
   methods = {
+    setController: async (
+      params: TimeZoneCoordinatorByteVecTypes.CallMethodParams<"setController">
+    ): Promise<
+      TimeZoneCoordinatorByteVecTypes.CallMethodResult<"setController">
+    > => {
+      return callMethod(
+        TimeZoneCoordinatorByteVec,
+        this,
+        "setController",
+        params,
+        getContractByCodeHash
+      );
+    },
     getItem: async (
       params: TimeZoneCoordinatorByteVecTypes.CallMethodParams<"getItem">
     ): Promise<TimeZoneCoordinatorByteVecTypes.CallMethodResult<"getItem">> => {
@@ -163,6 +206,58 @@ export class TimeZoneCoordinatorByteVecInstance extends ContractInstance {
         "getItem",
         params,
         getContractByCodeHash
+      );
+    },
+    destroy: async (
+      params?: TimeZoneCoordinatorByteVecTypes.CallMethodParams<"destroy">
+    ): Promise<TimeZoneCoordinatorByteVecTypes.CallMethodResult<"destroy">> => {
+      return callMethod(
+        TimeZoneCoordinatorByteVec,
+        this,
+        "destroy",
+        params === undefined ? {} : params,
+        getContractByCodeHash
+      );
+    },
+  };
+
+  view = this.methods;
+
+  transact = {
+    setController: async (
+      params: TimeZoneCoordinatorByteVecTypes.SignExecuteMethodParams<"setController">
+    ): Promise<
+      TimeZoneCoordinatorByteVecTypes.SignExecuteMethodResult<"setController">
+    > => {
+      return signExecuteMethod(
+        TimeZoneCoordinatorByteVec,
+        this,
+        "setController",
+        params
+      );
+    },
+    getItem: async (
+      params: TimeZoneCoordinatorByteVecTypes.SignExecuteMethodParams<"getItem">
+    ): Promise<
+      TimeZoneCoordinatorByteVecTypes.SignExecuteMethodResult<"getItem">
+    > => {
+      return signExecuteMethod(
+        TimeZoneCoordinatorByteVec,
+        this,
+        "getItem",
+        params
+      );
+    },
+    destroy: async (
+      params: TimeZoneCoordinatorByteVecTypes.SignExecuteMethodParams<"destroy">
+    ): Promise<
+      TimeZoneCoordinatorByteVecTypes.SignExecuteMethodResult<"destroy">
+    > => {
+      return signExecuteMethod(
+        TimeZoneCoordinatorByteVec,
+        this,
+        "destroy",
+        params
       );
     },
   };

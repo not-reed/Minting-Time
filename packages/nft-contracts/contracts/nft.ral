@@ -16,7 +16,7 @@ Contract NFT(collectionId: ByteVec, nftIndex: U256, zone: ByteVec, offset: I256,
   const MIME_SVG = b`data:image/svg+xml;base64,`
 
   pub fn getTokenUri() -> ByteVec {
-    let time = toU256!(toI256!(blockTimeStamp!()) + (offset * 1000i))
+    let time = getTime()
 
     let seconds = (time / 1000) % 60
     let minutes = (time / (1000 * 60)) % 60
@@ -36,32 +36,7 @@ Contract NFT(collectionId: ByteVec, nftIndex: U256, zone: ByteVec, offset: I256,
   }
 
   pub fn getName() -> ByteVec {
-    return zone ++ b`%20-%20` ++ abbr ++ b`(` ++ getOffset() ++ b`)`
-  }
-
-  fn getOffset() -> ByteVec {
-
-    let mut res = b`GMT`
-
-    if (offset < 0i) {
-      res = res ++ b`-`
-    } else {
-      res = res ++ b`+`
-    }
-
-    let offsetAbs = if (offset < 0i)  toU256!(offset * -1) else toU256!(offset)
-
-    let time = offsetAbs / 3600
-
-    return res ++ u256ToString!(time)
-  }
-
-  pub fn getAttributes() -> ByteVec {
-    return b`[`
-     ++ createTrait(b`zone`, zone) ++ COMMA
-      ++ createTrait(b`offset`, getOffset()) ++ COMMA
-      ++ createTrait(b`abbr`, abbr)
-      ++ b`]`
+    return zone ++ b`%20-%20` ++ abbr ++ b`(` ++ getOffsetLabel() ++ b`)`
   }
 
   pub fn getNFTIndex() -> U256 {
@@ -72,12 +47,38 @@ Contract NFT(collectionId: ByteVec, nftIndex: U256, zone: ByteVec, offset: I256,
     return collectionId, nftIndex
   }
 
-  fn createTraits() -> ByteVec {
-    return b`"attributes": [` 
+  fn getOffsetLabel() -> ByteVec {
+
+    let mut res = b`GMT`
+
+    if (offset < 0i) {
+      res = res ++ b`-`
+    } else {
+      res = res ++ b`+`
+    }
+
+    let offsetAbs = if (offset < 0i) toU256!(offset * -1) else toU256!(offset)
+
+    let time = offsetAbs / 3600
+
+    return res ++ u256ToString!(time)
+  }
+
+  pub fn getTime() -> U256 {
+    return toU256!(toI256!(blockTimeStamp!()) + (offset * 1000i))
+  }
+
+  pub fn getAttributes() -> ByteVec {
+    return b`[`
+      ++ createTrait(b`time`, u256ToString!(getTime())) ++ COMMA
       ++ createTrait(b`zone`, zone) ++ COMMA
-      ++ createTrait(b`offset`, getOffset()) ++ COMMA
+      ++ createTrait(b`offset`, getOffsetLabel()) ++ COMMA
       ++ createTrait(b`abbr`, abbr)
       ++ b`]`
+  }
+
+  fn createTraits() -> ByteVec {
+    return b`"attributes":` ++ getAttributes()
   }
 
   fn createTrait(type: ByteVec, value: ByteVec) -> ByteVec {

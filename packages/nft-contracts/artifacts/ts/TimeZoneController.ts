@@ -25,6 +25,9 @@ import {
   getContractEventsCurrentCount,
   TestContractParamsWithoutMaps,
   TestContractResultWithoutMaps,
+  SignExecuteContractMethodParams,
+  SignExecuteScriptTxResult,
+  signExecuteMethod,
   addStdIdToFields,
   encodeContractFields,
 } from "@alephium/web3";
@@ -49,9 +52,17 @@ export namespace TimeZoneControllerTypes {
       params: Omit<CallContractParams<{}>, "args">;
       result: CallContractResult<[HexString, HexString, HexString]>;
     };
+    setCollection: {
+      params: CallContractParams<{ collection_: Address }>;
+      result: CallContractResult<null>;
+    };
     getItem: {
       params: Omit<CallContractParams<{}>, "args">;
       result: CallContractResult<[HexString, bigint, HexString]>;
+    };
+    destroy: {
+      params: Omit<CallContractParams<{}>, "args">;
+      result: CallContractResult<null>;
     };
   }
   export type CallMethodParams<T extends keyof CallMethodTable> =
@@ -66,6 +77,29 @@ export namespace TimeZoneControllerTypes {
       ? CallMethodTable[MaybeName]["result"]
       : undefined;
   };
+
+  export interface SignExecuteMethodTable {
+    getStuff: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    setCollection: {
+      params: SignExecuteContractMethodParams<{ collection_: Address }>;
+      result: SignExecuteScriptTxResult;
+    };
+    getItem: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+    destroy: {
+      params: Omit<SignExecuteContractMethodParams<{}>, "args">;
+      result: SignExecuteScriptTxResult;
+    };
+  }
+  export type SignExecuteMethodParams<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["params"];
+  export type SignExecuteMethodResult<T extends keyof SignExecuteMethodTable> =
+    SignExecuteMethodTable[T]["result"];
 }
 
 class Factory extends ContractFactory<
@@ -102,7 +136,7 @@ class Factory extends ContractFactory<
     ): Promise<
       TestContractResultWithoutMaps<[HexString, HexString, HexString]>
     > => {
-      return testMethod(this, "getStuff", params);
+      return testMethod(this, "getStuff", params, getContractByCodeHash);
     },
     setCollection: async (
       params: TestContractParamsWithoutMaps<
@@ -110,7 +144,7 @@ class Factory extends ContractFactory<
         { collection_: Address }
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "setCollection", params);
+      return testMethod(this, "setCollection", params, getContractByCodeHash);
     },
     getItem: async (
       params: Omit<
@@ -120,7 +154,7 @@ class Factory extends ContractFactory<
     ): Promise<
       TestContractResultWithoutMaps<[HexString, bigint, HexString]>
     > => {
-      return testMethod(this, "getItem", params);
+      return testMethod(this, "getItem", params, getContractByCodeHash);
     },
     getRandom: async (
       params: Omit<
@@ -128,7 +162,7 @@ class Factory extends ContractFactory<
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<bigint>> => {
-      return testMethod(this, "getRandom", params);
+      return testMethod(this, "getRandom", params, getContractByCodeHash);
     },
     destroy: async (
       params: Omit<
@@ -136,7 +170,7 @@ class Factory extends ContractFactory<
         "testArgs"
       >
     ): Promise<TestContractResultWithoutMaps<null>> => {
-      return testMethod(this, "destroy", params);
+      return testMethod(this, "destroy", params, getContractByCodeHash);
     },
   };
 }
@@ -146,7 +180,7 @@ export const TimeZoneController = new Factory(
   Contract.fromJson(
     TimeZoneControllerContractJson,
     "",
-    "2d9b1f60a2f8c25143221e83c071a10e7c55091847e5652c51842abfaf127f75",
+    "783a1b4487881b694bd9723ccdac97a90a2c9a3e3ae3b75929f919a2c0644f21",
     []
   )
 );
@@ -173,6 +207,17 @@ export class TimeZoneControllerInstance extends ContractInstance {
         getContractByCodeHash
       );
     },
+    setCollection: async (
+      params: TimeZoneControllerTypes.CallMethodParams<"setCollection">
+    ): Promise<TimeZoneControllerTypes.CallMethodResult<"setCollection">> => {
+      return callMethod(
+        TimeZoneController,
+        this,
+        "setCollection",
+        params,
+        getContractByCodeHash
+      );
+    },
     getItem: async (
       params?: TimeZoneControllerTypes.CallMethodParams<"getItem">
     ): Promise<TimeZoneControllerTypes.CallMethodResult<"getItem">> => {
@@ -183,6 +228,49 @@ export class TimeZoneControllerInstance extends ContractInstance {
         params === undefined ? {} : params,
         getContractByCodeHash
       );
+    },
+    destroy: async (
+      params?: TimeZoneControllerTypes.CallMethodParams<"destroy">
+    ): Promise<TimeZoneControllerTypes.CallMethodResult<"destroy">> => {
+      return callMethod(
+        TimeZoneController,
+        this,
+        "destroy",
+        params === undefined ? {} : params,
+        getContractByCodeHash
+      );
+    },
+  };
+
+  view = this.methods;
+
+  transact = {
+    getStuff: async (
+      params: TimeZoneControllerTypes.SignExecuteMethodParams<"getStuff">
+    ): Promise<TimeZoneControllerTypes.SignExecuteMethodResult<"getStuff">> => {
+      return signExecuteMethod(TimeZoneController, this, "getStuff", params);
+    },
+    setCollection: async (
+      params: TimeZoneControllerTypes.SignExecuteMethodParams<"setCollection">
+    ): Promise<
+      TimeZoneControllerTypes.SignExecuteMethodResult<"setCollection">
+    > => {
+      return signExecuteMethod(
+        TimeZoneController,
+        this,
+        "setCollection",
+        params
+      );
+    },
+    getItem: async (
+      params: TimeZoneControllerTypes.SignExecuteMethodParams<"getItem">
+    ): Promise<TimeZoneControllerTypes.SignExecuteMethodResult<"getItem">> => {
+      return signExecuteMethod(TimeZoneController, this, "getItem", params);
+    },
+    destroy: async (
+      params: TimeZoneControllerTypes.SignExecuteMethodParams<"destroy">
+    ): Promise<TimeZoneControllerTypes.SignExecuteMethodResult<"destroy">> => {
+      return signExecuteMethod(TimeZoneController, this, "destroy", params);
     },
   };
 
