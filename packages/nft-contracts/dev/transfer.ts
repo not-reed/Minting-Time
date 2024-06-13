@@ -12,5 +12,3 @@ const signer = new PrivateKeyWallet({
 
 // bun dev/transfer.ts <alph account>
 await transfer(signer, Bun.argv[2], ALPH_TOKEN_ID, 1000n * ONE_ALPH);
-
-// await mintToken(Bun.argv[2], 1_000_000n * ONE_ALPH);

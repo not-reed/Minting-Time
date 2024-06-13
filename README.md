@@ -1,31 +1,56 @@
-# Alph.Pro Alephium Boiler Plate
+# Minting Time
 
-```
-apps/
-    frontend/          - user facing UI
-    backend/           - backend API
-packages/
-    token-contracts/   - example token faucet
-    typescript-config/ - 
-    web3/              - web3 shim for faster bun compiles & development
-services/
-    devnet/            - devnet docker compose
+> Project Boilerplate started using https://github.com/not-reed/fullstack-alephium
+
+```sh
+bunx degit not-reed/fullstack-alephium minting-time
 ```
 
-To developing quickly:
+## Backend Development
 
-```bash
-# install dependencies
+```sh
+cd apps/backend
 bun install
+bun dev
+```
 
-# start devnet node
-bun run start:devnet
+## Frontend Development
 
-# compile, test, and deploy contracts
-bun run compile -d devnet
-bun run test
-bun run deploy -d devnet
+> requires some backend to be operational, either locally, or using live API
 
-# start web services
-bun run dev
+```sh
+cd apps/frontend
+bun install
+bun dev
+```
+
+## Contract Development
+
+```sh
+cd packages/nft-contracts
+
+# run in separate terminals
+bun test:watch
+bun compile:watch
+
+# Running scripts
+bun dev/mint.ts
+bun dev/burn.ts
+bun dev/destroy.ts
+bun dev/transfer.ts <YOUR_ADDRESS>
+bun dev/withdraw.ts 
+```
+
+## Deployments
+
+```sh
+# contracts
+cd packages/nft-contracts
+bun cli compile --network devnet && bun cli deploy --network devnet
+
+# Backend API
+bun deploy:api
+
+# Frontend - on push to main
+git push
 ```
