@@ -22,12 +22,12 @@ onDisconnect(() => {
         <AlephiumConnect
             v-slot="{ isConnected, connectExtension, connectDesktop, connectMobile, connectWalletConnect, disconnect, account }">
             <template v-if="isConnected">
-                <h1 class="text-2xl mb-2">
+                <h1 class="text-2xl mb-2 text-center">
                     Connected To Alephium
                 </h1>
 
-                <p>{{ account.account.address.slice(0, 10) }}.............{{
-                    account.account.address.slice(account.account.address.length - 10, account.account.address.length)
+                <p class="text-center">{{ account.account.address.slice(0, 8) }}.............{{
+                    account.account.address.slice(-8)
                     }}</p>
 
                 <button class="px-4 py-2 border rounded-lg mx-auto w-48 transition bg-black hover:bg-zinc-900"

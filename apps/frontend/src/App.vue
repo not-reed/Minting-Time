@@ -7,8 +7,7 @@ import AlephiumConnectModal from "./components/AlephiumConnectModal.vue";
 
 import { ONE_ALPH, DUST_AMOUNT } from "@alephium/web3";
 
-// biome-ignore lint/style/useImportType: biome bug thinks this is a type import because its only used in the template
-import { MintNFT, BurnNFT } from "@repo/nft-contracts/artifacts/ts/scripts";
+import { type MintNFT as MintNFTType, MintNFT, BurnNFT } from "@repo/nft-contracts/artifacts/ts/scripts";
 
 import { computed, ref } from "vue";
 import { NETWORK, deployments } from "./data";
@@ -49,7 +48,7 @@ const fields = computed(() => ({
 		collection:
 				deployments.contracts.NFTCollection.contractInstance.contractId },
 	attoAlphAmount: ONE_ALPH * 5n + 100000000000000000n + DUST_AMOUNT,
-}) satisfies Parameters<typeof MintNFT.execute>[1]);
+}) satisfies Parameters<typeof MintNFTType.execute>[1]);
 
 const { open, close } = useModal({
 	component: AlephiumConnectModal,
@@ -61,6 +60,8 @@ const { open, close } = useModal({
 });
 
 const pendingTransaction = ref(false)
+
+const burnEnabled = false
 </script>
 
 <template>
@@ -123,24 +124,22 @@ const pendingTransaction = ref(false)
 				<AlephiumConnect v-slot="{ isConnected, account }">
 					<template v-if="!isConnected">
 						<div class="flex flex-col">
-							<h2 class="text-4xl">Your Collected TimeZones:</h2>
 							<p>Not Connected</p>
 						</div>
 					</template>
 					<template v-else>
 						<div class="flex flex-col">
-							<h2 class="text-4xl">Your Collected TimeZones:</h2>
-							<div>
-
+							<div class="flex gap-4">
+								Connected As:
 								<button @click="open" class="bg-black">
-									<p v-if="account.account.address.length > 50">
-										{{ account.account.address.slice(0, 25) }}...{{
-										account.account.address.slice(account.account.address.length - 25,
+									<p>
+										{{ account.account.address.slice(0, 16) }}.........{{
+										account.account.address.slice(account.account.address.length - 16,
 										account.account.address.length) }}
 									</p>
-									<p v-else>{{ account.account.address}}</p>
 								</button>
 							</div>
+							<h2 class="text-4xl">Your Collected TimeZones:</h2>
 						</div>
 
 						<TransitionGroup name="list" tag="div" class="grid grid-cols-2 justify-between max-w-xl gap-8">
@@ -175,7 +174,7 @@ const pendingTransaction = ref(false)
 								<img :src="clock.metadata.image" alt="clock" class="h-24 w-24" />
 								<div>{{ decodeURIComponent(clock.metadata.name) }}</div>
 
-								<!-- <AlephiumExecute :txScript="BurnNFT" :fields="{
+								<AlephiumExecute v-if="burnEnabled" :txScript="BurnNFT" :fields="{
 	initialFields: { nft: clock.id },
 	tokens: [{ id: clock.id, amount: 1n }],
 }" v-slot="{ execute }">
@@ -191,7 +190,7 @@ const pendingTransaction = ref(false)
 											</svg>
 										</div>BURN
 									</button>
-								</AlephiumExecute> -->
+								</AlephiumExecute>
 							</div>
 						</TransitionGroup>
 					</template>

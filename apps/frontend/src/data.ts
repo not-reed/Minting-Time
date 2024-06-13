@@ -1,8 +1,4 @@
 import { loadDeployments } from "@repo/nft-contracts";
-// const loadDeployments: any = () => {};
-
-// export const deployments = loadDeployments("devnet");
-// export const API_URL = "http://localhost:3001";
 
 export const NETWORK = "mainnet";
 export const deployments = loadDeployments(NETWORK);

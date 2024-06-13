@@ -1,5 +1,3 @@
-import "./web3-polyfill";
-
 import "./style.css";
 import "vue-final-modal/style.css";
 
